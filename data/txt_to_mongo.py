@@ -3,6 +3,7 @@
 import simplejson
 import io
 import pymongo
+TXTFILE = 'finefoods.txt'
 PATH_TO_TXTFILE = 'sources/finefoods.txt'
 
 
@@ -39,11 +40,12 @@ def txt_parse(filename):
 
 
 '''
-Script to insert entries into mongoDB
+Script to insert all entries in mongo database
 '''
-gen = txt_parse(PATH_TO_TXTFILE) # instantiate generator object
-client = pymongo.MongoClient('mongodb://localhost:27017/')
-db = client.areviews
-coll = db.reviews
-for item in gen:
+if __name__ == '__main__':
+    gen = txt_parse(PATH_TO_TXTFILE+TXTFILE) # instantiate generator object
+    client = pymongo.MongoClient('mongodb://localhost:27017/')
+    db = client.areviews
+    coll = db.reviews
+    for item in gen:
     coll.insert_one(item)
