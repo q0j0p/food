@@ -2,7 +2,12 @@
 
 ## Data Collection 
 
-## Data Processing 
+## Data Processing and Evaluation 
+
+## 
+
+- Cluster terms describing each food item.  
+
 
 ## Minimum Viable Product 
 
