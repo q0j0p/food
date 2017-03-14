@@ -8,6 +8,8 @@
 
 - Cluster terms describing each food item.  
 
+## Create Minimum Viable Product 
 
-## Minimum Viable Product 
 
+
+## Deploy Web App
