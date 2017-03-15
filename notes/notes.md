@@ -40,3 +40,6 @@ bash Anaconda2-4.1.1-Linux-x86_64.sh
 [install procedure] 
 
 source .bashrc
+
+restore tmux after computer reboot: `tmux a`
+
