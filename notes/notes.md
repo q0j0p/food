@@ -14,3 +14,28 @@ HTTP stats code is 429: Too many requests.
 
 ## Mongodb and pymongo 
 
+## t2.micro instantiation, setup for scraping 
+Steps: 
+
+[Instantiate EC2] 
+
+ssh -i ~/.ssh/jgalv2.pem  ubuntu@ec2-54-200-187-213.us-west-2.compute.amazonaws.com
+sudo apt-get install install mongodb 
+sudo apt install python-pip
+tmux 
+
+sudo apt-get update 
+
+sudo apt install python-pip
+
+pip install conda 
+
+pip install -- upgrade pip 
+
+wget https://repo.continuum.io/archive/Anaconda2-4.1.1-Linux-x86_64.sh
+
+bash Anaconda2-4.1.1-Linux-x86_64.sh
+
+[install procedure] 
+
+source .bashrc
