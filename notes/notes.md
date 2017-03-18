@@ -43,3 +43,13 @@ source .bashrc
 
 restore tmux after computer reboot: `tmux a`
 
+
+## Characterizing allrecipes members: 
+
+Categories: 
+* all members are 'cooks' 
+
+* # of followers 
+* # of favorites 
+* # of recipes made 
+
