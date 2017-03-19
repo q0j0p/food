@@ -43,6 +43,12 @@ source .bashrc
 
 restore tmux after computer reboot: `tmux a`
 
+## Allrecipes.com 
+- The most popular English-langauge food websie in the world.  50 million visits in December.  
+
+Articles 
+[link](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html)
+
 
 ## Characterizing allrecipes members: 
 
