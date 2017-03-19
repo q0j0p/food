@@ -49,7 +49,7 @@ restore tmux after computer reboot: `tmux a`
 Categories: 
 * all members are 'cooks' 
 
-* # of followers 
-* # of favorites 
-* # of recipes made 
+* \# of followers 
+* \# of favorites 
+* \# of recipes made 
 
