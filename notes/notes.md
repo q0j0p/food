@@ -16,7 +16,8 @@ HTTP stats code is 429: Too many requests.
 
 ## Mongodb and pymongo 
 
-## t2.micro instantiation, setup for scraping 
+## AWS
+### t2.micro instantiation, setup for scraping 
 Steps: 
 
 [Instantiate EC2] 
