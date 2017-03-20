@@ -60,6 +60,15 @@ Articles
 
 [link](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html)
 
+## Web app development  
+* `'flask'`- python based micro framework for web applications
+* `'jinja2'`- templating language for python 
+* `'bootstrap'` for front end (html, css, javascript) 
+
+Structure: 
+  * templates 
+  * static 
+  
 
 ## Characterizing allrecipes members: 
 
