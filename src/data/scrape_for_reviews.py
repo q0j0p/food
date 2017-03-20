@@ -54,6 +54,7 @@ class scraper(object):
                 time.sleep(10 + random.random() * 4)
                 #update page
                 self.community_page = self.driver.page_source
+#            self.mongodbase['community_page']
         return self.community_page
 
     def get_community_members_continue(self, num_pages):
@@ -66,7 +67,12 @@ class scraper(object):
             self.community_page = self.driver.page_source
         return self.community_page
 
-
+    def check_dbase():
+        """
+        Check database stats
+        """
+        
+        print self.mongodbase
 
 
     def get_html(self, browser="firefox"):
