@@ -66,7 +66,7 @@ Articles
 * `'flask'`- python based micro framework for web applications
 * `'jinja2'`- templating language for python 
 * `'bootstrap'` for front end (html, css, javascript) 
-  * [marketing template[(https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_marketing&stacked=h) 
+  * [marketing template](https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_marketing&stacked=h) 
   * [Simple one page template](https://startbootstrap.com/template-overviews/one-page-wonder/)
 
 Structure: 
