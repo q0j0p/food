@@ -1,4 +1,6 @@
 
+## Data collection 
+
 Gather all data from UDSA NDB database: 
 
 -capture error msg when gathering NDB API data  
@@ -11,7 +13,6 @@ KeyError: 'list'
 HTTP stats code is 429: Too many requests.  
 ```
 
--find out difference between food list and food items. 
 
 ## Mongodb and pymongo 
 
@@ -64,11 +65,14 @@ Articles
 * `'flask'`- python based micro framework for web applications
 * `'jinja2'`- templating language for python 
 * `'bootstrap'` for front end (html, css, javascript) 
+  * [marketing template[(https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_marketing&stacked=h) 
+  * [Simple one page template](https://startbootstrap.com/template-overviews/one-page-wonder/)
 
 Structure: 
   * templates 
   * static 
-  
+ 
+ ## 
 
 ## Characterizing allrecipes members: 
 
