@@ -26,7 +26,7 @@ db.members.insert({"member_ID" : str member_ID,
                    "followers" : list followers, 
                    "following" : list following, 
                    "contacted" : list contacted})
-                   ```
+```
 
 ## AWS
 ### t2.micro instantiation, setup for scraping 
