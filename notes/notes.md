@@ -92,4 +92,6 @@ Categories:
 * recommendations populate weekly schedule 
 * anti deprivation: abundance of options to create wholesome eating choices.  
 
+### References 
+[Cooksmarts](https://www.cooksmarts.com/weekly-meal-plan-service/)
 
