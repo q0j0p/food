@@ -15,7 +15,7 @@ HTTP stats code is 429: Too many requests.
 
 
 ## Mongodb and pymongo 
-`MongoDB pseudo-schema: 
+```MongoDB pseudo-schema: 
 db = client.allrecipes 
 db.members.insert({"member_ID" : str member_ID, 
                    "link" : str link,
@@ -26,7 +26,7 @@ db.members.insert({"member_ID" : str member_ID,
                    "followers" : list followers, 
                    "following" : list following, 
                    "contacted" : list contacted})
-                   `
+                   ```
 
 ## AWS
 ### t2.micro instantiation, setup for scraping 
