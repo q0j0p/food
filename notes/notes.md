@@ -70,6 +70,8 @@ restore tmux after computer reboot: `tmux a`
 - Fix for error ( cannot open shared object file: No such file or directory): 
 `sudo apt-get install libfontconfig`
 
+
+
 ## Web app development  
 * `'flask'`- python based micro framework for web applications
 * `'jinja2'`- templating language for python 
@@ -82,7 +84,7 @@ Structure:
   * static 
 
 
-## Allrecipes.com 
+# Allrecipes.com 
 - The most popular English-langauge food websie in the world.  50 million visits in December.  
 
 Articles 
@@ -101,11 +103,25 @@ Categories:
 * \# of favorites 
 * \# of recipes made 
 
+# Motivations 
+
+The US spends the majority of its healthcare budget on preventable "lifestyle" chronic diseases ($ 1.5 trillion per year), more than any other nation, with predictable increasing trends.  In spite of live an ever increasing body of information on healthy living, the way we absorb and implement insights from knowledge is evidently lacking.  While this is attributable to various commercial and social factors, it is at least in part a "data science" problem, and part of the solution is to equip the user with more data-based tools that are shaped to effectively modify lifestyle choices.  
+
+On the issue of nutrition, 
+
 ## Principles 
 * promote cooking, use of fresh ingredients, sustainable healthy living 
 * recommendations populate weekly schedule 
 * anti deprivation: abundance of options to create wholesome eating choices.  
 
 ### References 
-[Cooksmarts](https://www.cooksmarts.com/weekly-meal-plan-service/)
+
+#### Concept
+- [Cooksmarts](https://www.cooksmarts.com/weekly-meal-plan-service/)  
+
+#### Modeling 
+- [Recipe recommendation using ingredient networks](http://lazerlab.net/publication/recipe-recommendation-using-ingredient-networks)
+- [Amazon fine food reviews](https://snap.stanford.edu/data/web-FineFoods.html) 
+
+
 
