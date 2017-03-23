@@ -1,4 +1,6 @@
 
+## Data collection 
+
 Gather all data from UDSA NDB database: 
 
 -capture error msg when gathering NDB API data  
@@ -11,11 +13,25 @@ KeyError: 'list'
 HTTP stats code is 429: Too many requests.  
 ```
 
--find out difference between food list and food items. 
 
 ## Mongodb and pymongo 
 
-## t2.micro instantiation, setup for scraping 
+MongoDB pseudo-schema: 
+```
+db = client.allrecipes 
+db.members.insert({"member_ID" : str member_ID, 
+                   "link" : str link,
+                   "faviorites" : list favorite, 
+                   "madeit" : list made_it, 
+                   "reviews" : list reviews, 
+                   "personals" : list personal_recs, 
+                   "followers" : list followers, 
+                   "following" : list following, 
+                   "contacted" : list contacted})
+```
+
+## AWS
+### t2.micro instantiation, setup for scraping 
 Steps: 
 
 [Instantiate EC2] 
@@ -53,22 +69,30 @@ restore tmux after computer reboot: `tmux a`
 `sudo ln -s /usr/local/share/phantomjs-1.9.7-linux-x86_64/bin/phantomjs /usr/bin/phantomjs`
 - Fix for error ( cannot open shared object file: No such file or directory): 
 `sudo apt-get install libfontconfig`
-## Allrecipes.com 
+
+
+
+## Web app development  
+* `'flask'`- python based micro framework for web applications
+* `'jinja2'`- templating language for python 
+* `'bootstrap'` for front end (html, css, javascript) [here](https://www.w3schools.com/bootstrap/bootstrap_templates.asp)
+  * [marketing template](https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_marketing&stacked=h) 
+  * [Simple one page template](https://startbootstrap.com/template-overviews/one-page-wonder/)
+
+Structure: 
+  * templates 
+  * static 
+
+
+# Allrecipes.com 
 - The most popular English-langauge food websie in the world.  50 million visits in December.  
 
 Articles 
 
 [link](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html)
 
-## Web app development  
-* `'flask'`- python based micro framework for web applications
-* `'jinja2'`- templating language for python 
-* `'bootstrap'` for front end (html, css, javascript) 
-
-Structure: 
-  * templates 
-  * static 
-  
+ 
+ ## 
 
 ## Characterizing allrecipes members: 
 
@@ -78,4 +102,26 @@ Categories:
 * \# of followers 
 * \# of favorites 
 * \# of recipes made 
+
+# Motivations 
+
+The US spends the majority of its healthcare budget on preventable "lifestyle" chronic diseases ($ 1.5 trillion per year), more than any other nation, with predictable increasing trends.  In spite of live an ever increasing body of information on healthy living, the way we absorb and implement insights from knowledge is evidently lacking.  While this is attributable to various commercial and social factors, it is at least in part a "data science" problem, and part of the solution is to equip the user with more data-based tools that are shaped to effectively modify lifestyle choices.  
+
+On the issue of nutrition, 
+
+## Principles 
+* promote cooking, use of fresh ingredients, sustainable healthy living 
+* recommendations populate weekly schedule 
+* anti deprivation: abundance of options to create wholesome eating choices.  
+
+### References 
+
+#### Concept
+- [Cooksmarts](https://www.cooksmarts.com/weekly-meal-plan-service/)  
+
+#### Modeling 
+- [Recipe recommendation using ingredient networks](http://lazerlab.net/publication/recipe-recommendation-using-ingredient-networks)
+- [Amazon fine food reviews](https://snap.stanford.edu/data/web-FineFoods.html) 
+
+
 
