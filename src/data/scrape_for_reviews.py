@@ -20,7 +20,6 @@ class scraper(object):
     def __init__(self, base_url, dbname='allecipes'):
         MONGODB_URI = 'mongodb://localhost:27017/'
         self.base_url = base_url
-        self.name = dbname
         try:
             self.mongoclient = pymongo.MongoClient(MONGODB_URI)
             print "Connected to {}".format(MONGODB_URI)
@@ -28,12 +27,24 @@ class scraper(object):
             print "Could not connect to MongoDB: %s".format(e)
         self.mongodbase = self.mongoclient[dbname]
 
-
-
     def get_community_members(self, num_pages=None, browser = "Firefox", url_path = "/ask-the-community"):
         """
-        Access community page
-        Code to scroll down and click
+        Access community page using selenium and scrape, scroll down and click.
+        Store entire page in database.
+
+        Parameters
+        ----------
+        num_pages: int
+            Number of pages ("more" button clicks).
+        browser: object
+            Selenium browser to use.
+        url_path: string
+            partial path to target page.
+
+        Returns
+        -------
+        
+
         """
         # Set URL
         url = self.base_url + url_path
@@ -67,11 +78,61 @@ class scraper(object):
             self.community_page = self.driver.page_source
         return self.community_page
 
+    def get_member_pages(self, memberid):
+        """Given member ID, get all pertinent pages of member and insert into database.
+
+        Parameters
+        ----------
+        memberid : string
+            Allrecipe "cook" ID
+
+        Returns
+        -------
+        None
+        """
+
+
+
+    def get_page_from_list(self, urllist, collname, offset=0):
+       """Given a list of urls, store page content in database
+
+       Parameters
+       ----------
+       urllist : list
+           List of urls.
+       offset : int
+           in case of interruption, start from offset index
+       collname : str
+           name of collection
+
+       Returns
+       -------
+       None
+
+       """
+
+       for i,link in enumerate(urllist[offset:]):
+            self.driver.get(link)
+            print "list item number {}, {}\n".format(i+offset,link)
+            page = self.driver.page_source
+            self.mongodbase[collname].insert_one({'link': link,
+                                  'page': page})
+            time.sleep(5 + random.random() * 5)
+
+
+    def populate_members(self, coll, ):
+        """
+        Given a member_ID, populate document of member (favirites,
+        madeit, reviews, recipes, followers, following)
+        """
+        pass
+
+
     def check_dbase():
         """
         Check database stats
         """
-        
+
         print self.mongodbase
 
 
@@ -89,3 +150,30 @@ class scraper(object):
 
     def use_phantom(self):
         self.driver = webdriver.PhantomJS()
+
+        coll = self.mongodbase['members']
+        pass
+
+
+def get_recipe_ids(self):
+    """Get recipe ids from recipe links in page.
+
+    Parameters
+    ----------
+
+    """
+    pass
+
+'''
+db = client.allrecipes
+db.members.insert({"member_ID" : str member_ID,
+                   "link" : str link,
+                   "faviorites" : list favorite,
+                   "madeit" : list made_it,
+                   "reviews" : list reviews,
+                   "personals" : list personal_recs,
+                   "followers" : list followers,
+                   "following" : list following,
+                   "contacted" : list contacted,
+                   "update_time": str update})
+'''
