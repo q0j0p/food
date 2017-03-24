@@ -26,6 +26,7 @@ class scraper(object):
         except pymongo.errors.ConnectionFailure, e:
             print "Could not connect to MongoDB: %s".format(e)
         self.mongodbase = self.mongoclient[dbname]
+        self.browser = "Firefox"
 
     def get_community_members(self, num_pages=None, browser = "Firefox", url_path = "/ask-the-community"):
         """
@@ -43,7 +44,7 @@ class scraper(object):
 
         Returns
         -------
-        
+        self.community_page: pymongo.collection.Collection
 
         """
         # Set URL
@@ -69,6 +70,7 @@ class scraper(object):
         return self.community_page
 
     def get_community_members_continue(self, num_pages):
+
         for i in range(num_pages):
             self.driver.find_element_by_css_selector(
             'a.load-more-button.button.button-wide').click()
@@ -76,6 +78,7 @@ class scraper(object):
             time.sleep(10 + random.random() * 4)
             #update page
             self.community_page = self.driver.page_source
+        self.driver.close()
         return self.community_page
 
     def get_member_pages(self, memberid):
@@ -90,6 +93,57 @@ class scraper(object):
         -------
         None
         """
+        url = self.base_url + "/cook/" + str(memberid)
+        self.use_firefox()
+        self.driver.get(url+ "/favorites/")
+        favorites_page = self.driver.page_source
+        self.driver.get(url+"/following/")
+        following_page = self.driver.page_source
+        self.driver.get(url+"/reviews/")
+        reviews_page = self.driver.page_source
+        self.driver.get(url+"/followers/")
+        followers_page = self.driver.page_source
+        self.driver.get(url+"/madeit/")
+        madeit_page = self.driver.page_source
+        self.driver.get(url+"/recipes/")
+        recipes_page = self.driver.page_source
+
+
+        self.mongodbase['members'].update_one(
+            {"member_ID" : memberid},
+            {"$set" :
+                {"favorites_page": favorites_page,
+                 "following_page": following_page,
+                 "reviews_page": reviews_page,
+                 "followers_page": followers_page,
+                 "madeit_page": madeit_page,
+                 "recipes_page": recipes_page 
+                })
+
+# for i,member in mems[191:]:
+#     browser.get(member['link'] + "/favorites/")
+#     print "list item number {}, {}\n".format(i, member['link'])
+#     favorites_page = browser.page_source
+#     browser.get(member['link'] + "/made-it/")
+#     madeit_page = browser.page_source
+#     browser.get(member['link'] + '/reviews/')
+#     reviews_page = browser.page_source
+#     browser.get(member['link'] + '/recipes/')
+#     recipes_page = browser.page_source
+#     browser.get(member['link'] + '/followers/')
+#     followers_page = browser.page_source
+#     browser.get(member['link'] + '/following/')
+#     following_page = browser.page_source
+#     db.members.update({"member_ID" : member['member_ID']},
+#                    {'$set': {'favorites_page': favorites_page,
+#                              'madeit_page' : madeit_page,
+#                              'reviews_page' : reviews_page,
+#                              'recipes_page' : recipes_page,
+#                              'followers_page' : followers_page,
+#                              'following_page' : following_page
+#                   }})
+#
+#     time.sleep(5 + random.random() * 5)
 
 
 
