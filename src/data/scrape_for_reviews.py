@@ -10,15 +10,16 @@ import random
 import requests
 import pymongo
 import matplotlib.pyplot as plt
-BASE_URL = 'http://dish.allrecipes.com'
-
+BASE_URL = 'http://allrecipes.com'
+MOGODB_NAME = "allrecipes"
+MONGODB_URI = 'mongodb://localhost:27017/'
 
 class scraper(object):
     """
     Simple scraper, namely for recipes using either selenium or PhantomJS
     """
-    def __init__(self, base_url, dbname='allecipes'):
-        MONGODB_URI = 'mongodb://localhost:27017/'
+    def __init__(self, base_url, dbname = MOGODB_NAME):
+
         self.base_url = base_url
         try:
             self.mongoclient = pymongo.MongoClient(MONGODB_URI)
@@ -26,6 +27,7 @@ class scraper(object):
         except pymongo.errors.ConnectionFailure, e:
             print "Could not connect to MongoDB: %s".format(e)
         self.mongodbase = self.mongoclient[dbname]
+        self.members_coll = self.mongodbase['members'] # Does this work?
         self.browser = "Firefox"
 
     def get_community_members(self, num_pages=None, browser = "Firefox", url_path = "/ask-the-community"):
@@ -93,32 +95,64 @@ class scraper(object):
         -------
         None
         """
-        url = self.base_url + "/cook/" + str(memberid)
+        base_url = self.base_url + "/cook/" + str(memberid)
         self.use_firefox()
-        self.driver.get(url+ "/favorites/")
+
+        url = base_url + "/about-me/"
+        print "accessing {} \n".format(url)
+        self.driver.get(url)
+        aboutme_page = self.driver.page_source
+
+        url = base_url + "/favorites/"
+        print "accessing {} \n".format(url)
+        self.driver.get(url)
         favorites_page = self.driver.page_source
-        self.driver.get(url+"/following/")
+
+        url = base_url + "/following/"
+        print "accessing {} \n".format(url)
+        self.driver.get(url)
         following_page = self.driver.page_source
-        self.driver.get(url+"/reviews/")
-        reviews_page = self.driver.page_source
-        self.driver.get(url+"/followers/")
+
+        url = base_url + "/followers/"
+        print "accessing {} \n".format(url)
+        self.driver.get(url)
         followers_page = self.driver.page_source
-        self.driver.get(url+"/madeit/")
+
+        url = base_url + "/reviews/"
+        print "accessing {} \n".format(url)
+        self.driver.get(url)
+        reviews_page = self.driver.page_source
+
+        url = base_url + "/made-it/"
+        print "accessing {} \n".format(url)
+        self.driver.get(url)
         madeit_page = self.driver.page_source
-        self.driver.get(url+"/recipes/")
+
+        url = base_url + "/recipes/"
+        print "accessing {} \n".format(url)
+        self.driver.get(url)
         recipes_page = self.driver.page_source
 
-
-        self.mongodbase['members'].update_one(
+        client = pymongo.MongoClient(MONGODB_URI)
+        members_coll = client.allrecipes.members
+        members_coll.update_one(
             {"member_ID" : memberid},
             {"$set" :
-                {"favorites_page": favorites_page,
+                {"aboutme_page": aboutme_page,
+                "favorites_page": favorites_page,
                  "following_page": following_page,
-                 "reviews_page": reviews_page,
                  "followers_page": followers_page,
+                 "reviews_page": reviews_page,
                  "madeit_page": madeit_page,
-                 "recipes_page": recipes_page 
-                })
+                 "recipes_page": recipes_page
+                 "link": base_url
+                }},
+             upsert = True)
+
+#        Must access database directly-- cannot acces via instance attribute 
+#        return list(self.members_coll.find_one({"member_ID" : memberid},["member_ID"]))
+#        return self.mongodbase['members'].find({"member_ID": memberid})
+
 
 # for i,member in mems[191:]:
 #     browser.get(member['link'] + "/favorites/")
