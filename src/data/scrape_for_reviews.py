@@ -5,11 +5,13 @@ import time
 from urllib import urlencode  # TODO(Miles): Python 3
 from selenium import webdriver
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup as BS
 import random
 import requests
 import pymongo
 import matplotlib.pyplot as plt
+import collections
+
 BASE_URL = 'http://allrecipes.com'
 MOGODB_NAME = "allrecipes"
 MONGODB_URI = 'mongodb://localhost:27017/'
@@ -84,7 +86,8 @@ class scraper(object):
         return self.community_page
 
     def get_member_pages(self, memberid):
-        """Given member ID, get all pertinent pages of member and insert into database.
+        """Given member ID, get all pertinent pages directly from member webpage
+        and insert into member's MongoDB document.
 
         Parameters
         ----------
@@ -144,42 +147,209 @@ class scraper(object):
                  "followers_page": followers_page,
                  "reviews_page": reviews_page,
                  "madeit_page": madeit_page,
-                 "recipes_page": recipes_page
+                 "recipes_page": recipes_page,
                  "link": base_url
                 }},
              upsert = True)
 
-#        Must access database directly-- cannot acces via instance attribute 
+        return members_coll
+
+    def get_members_reviews(self):
+        """Populate member's 'review' data in 'allrecipes.members' collection by processing review page.
+
+        Parameters
+        ----------
+
+        """
+
+        client = pymongo.MongoClient(MONGODB_URI)
+        members_coll = client.allrecipes.members
+
+        noreviews_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "reviews": {"$exists": False}}, ["member_ID", "reviews_page"])
+        print "Count of member documents with no reviews field:", noreviews_docs_cursor.count()
+
+        print "docs processed:"
+        for doc in noreviews_docs_cursor:
+            doc_reviews_data = self._get_reviews_data(doc['reviews_page'])
+            members_coll.find_one_and_update({"member_ID": doc['member_ID']},
+                {"$set": {"reviews_recipe_id_list": doc_reviews_data[0],
+                          "reviews_dict": doc_reviews_data[1]}},
+                          upsert = True)
+            print doc['member_ID']
+        noreviews_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "reviews": {"$exists": False}},["member_ID"])
+        print "Count of member documents with no reviews field:", noreviews_docs_cursor.count()
+
+
+
+    def _get_reviews_data(self, page):
+
+            soup = BS(page, "html.parser")
+
+            # Extract pertinent info from soup
+            reviews_rating_list = [a.attrs['data-rating'] \
+                for a in soup.select("article.profile-review-card div.rated-review--stars div.ng-isolate-scope")]
+            reviews_recipe_id_list = [a.attrs['data-ng-href'].split('/')[2] \
+                for a in soup.select("article.profile-review-card div.rated-review--stars a.ng-scope")]
+            reviews_recipe_links_list = [a.attrs['data-ng-href'] \
+                for a in soup.select("article.profile-review-card div.rated-review--stars a.ng-scope")]
+            reviews_recipe_title_list = [a.text
+                for a in soup.select("article.profile-review-card h3.ng-binding")]
+            reviews_text_list = [a.text
+                for a in soup.select("article.profile-review-card div.rated-review-text")]
+
+            reviews = zip(reviews_recipe_id_list, reviews_recipe_title_list, reviews_rating_list,
+                           reviews_recipe_links_list, reviews_text_list)
+            # For each review, create a dict w/ keys= ['recipe_ID', 'recipe_title', 'recipe_rating', 'recipe_link', 'review_text']
+            reviews_dict_list = [dict(zip(['recipe_ID', 'recipe_title', 'recipe_rating',
+                                           'recipe_link', 'review_text'], a)) for a in reviews]
+            return (reviews_recipe_id_list, reviews_dict_list)
+
+
+    def get_members_madeits(self):
+        """Get member's 'made it' info"""
+
+        client = pymongo.MongoClient(MONGODB_URI)
+        members_coll = client.allrecipes.members
+
+        no_madeitlist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "madeits_dict": {"$exists": False}}, ["member_ID", "madeit_page"])
+        print "Count of member documents with no madeit field:", no_madeitlist_docs_cursor.count()
+
+        has_madeitlist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "madeits_dict": {"$exists": True}}, ["member_ID", "madeit_page"])
+        print "Count of member documents with madeit field:", has_madeitlist_docs_cursor.count()
+
+        print "docs processed:"
+        for doc in no_madeitlist_docs_cursor:
+            doc_madeits_data = self._get_madeits_data(doc['madeit_page'])
+            members_coll.find_one_and_update({"member_ID": doc['member_ID']},
+                {"$set": {"madeits_recipe_id_list": doc_madeits_data[0],
+                          "madeits_dict": doc_madeits_data[1]}},
+                          upsert = True)
+            print doc['member_ID']
+        no_madeitlist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "madeits_dict": {"$exists": False}},["member_ID"])
+        print "Count of member documents with no madeits field:", no_madeitlist_docs_cursor.count()
+
+
+    def _get_madeits_data(self, page):
+        """Extract 'made it' information from page"""
+
+        soup = BS(page, "html.parser")
+
+        # Extract pertinent info from soup
+        madeit_names_list = [a.text.replace(".","") for a in collections.OrderedDict.fromkeys(soup.select('article.grid-col--fixed-tiles div.ng-scope h3.grid-col__h3--recipe-grid a.ng-scope')) if a.text != ' ']
+        madeit_recipe_ID_list = [a.split('/')[2] for a in collections.OrderedDict.fromkeys([a.attrs['data-ng-href'] for a in soup.select('article.grid-col--fixed-tiles div.ng-scope h3.grid-col__h3--recipe-grid a.ng-scope')])]
+        madeit_list_dict = dict(zip(madeit_names_list, madeit_recipe_ID_list))
+
+#        Must access database directly-- cannot acces via instance attribute
 #        return list(self.members_coll.find_one({"member_ID" : memberid},["member_ID"]))
 #        return self.mongodbase['members'].find({"member_ID": memberid})
+        return (madeit_recipe_ID_list, madeit_list_dict)
+
+    def get_members_favorites(self):
+        """Get member's 'made it' info"""
+
+        # client = pymongo.MongoClient(MONGODB_URI)
+        # members_coll = client.allrecipes.members
+
+        no_favoriteslist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "favorites_dict": {"$exists": False}}, ["member_ID", "favorites_page"])
+        print "Count of member documents with no favorites field:", no_favoriteslist_docs_cursor.count()
+
+        has_favoriteslist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "favorites_dict": {"$exists": True}}, ["member_ID", "favorites_page"])
+        print "Count of member documents with favorites field:", has_favoriteslist_docs_cursor.count()
+
+        print "docs processed:"
+        for doc in no_favoriteslist_docs_cursor:
+            doc_favorites_data = self._get_favorites_data(doc['favorites_page'])
+            self.members_coll.find_one_and_update({"member_ID": doc['member_ID']},
+                {"$set": {"favorites_recipe_id_list": doc_favorites_data[0],
+                          "favorites_dict": doc_favorites_data[1]}},
+                          upsert = True)
+            print doc['member_ID']
+        no_favoriteslist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "favorites_dict": {"$exists": False}},["member_ID"])
+        print "Count of member documents with no favorites field:", no_favoriteslist_docs_cursor.count()
+
+    def _get_favorites_data(self, page):
+
+        soup = BS(page, "html.parser")
+
+        # Extract pertinent info from soup, zip up to make dict.
+        favorites_id_list = [a['href'].split('/')[2] for a in collections.OrderedDict.fromkeys(soup.select("h3.grid-col__h3 a.ng-scope"))]
+        favorites_name_list = [a.attrs['href'].split('/')[3] for a in collections.OrderedDict.fromkeys(soup.select("h3.grid-col__h3 a.ng-scope"))]
+        favorites_recipe_dict = dict(zip(favorites_name_list, favorites_id_list))
+        return (favorites_id_list, favorites_recipe_dict)
 
 
-# for i,member in mems[191:]:
-#     browser.get(member['link'] + "/favorites/")
-#     print "list item number {}, {}\n".format(i, member['link'])
-#     favorites_page = browser.page_source
-#     browser.get(member['link'] + "/made-it/")
-#     madeit_page = browser.page_source
-#     browser.get(member['link'] + '/reviews/')
-#     reviews_page = browser.page_source
-#     browser.get(member['link'] + '/recipes/')
-#     recipes_page = browser.page_source
-#     browser.get(member['link'] + '/followers/')
-#     followers_page = browser.page_source
-#     browser.get(member['link'] + '/following/')
-#     following_page = browser.page_source
-#     db.members.update({"member_ID" : member['member_ID']},
-#                    {'$set': {'favorites_page': favorites_page,
-#                              'madeit_page' : madeit_page,
-#                              'reviews_page' : reviews_page,
-#                              'recipes_page' : recipes_page,
-#                              'followers_page' : followers_page,
-#                              'following_page' : following_page
-#                   }})
-#
-#     time.sleep(5 + random.random() * 5)
+    def get_members_following(self):
+        """Get the ID and names of people followed by the members"""
+        no_followinglist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "following_dict": {"$exists": False}}, ["member_ID", "following_page"])
+        print "Count of member documents with no following field:", no_followinglist_docs_cursor.count()
+
+        has_followinglist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "following_dict": {"$exists": True}}, ["member_ID", "following_page"])
+        print "Count of member documents with following field:", has_followinglist_docs_cursor.count()
+
+        print "docs processed:"
+        for doc in no_followinglist_docs_cursor:
+            doc_following_data = self._get_following_data(doc['following_page'])
+            self.members_coll.find_one_and_update({"member_ID": doc['member_ID']},
+                {"$set": {"following_recipe_id_list": doc_following_data[0],
+                          "following_dict": doc_following_data[1]}},
+                          upsert = True)
+            print doc['member_ID']
+        no_followinglist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "following_dict": {"$exists": False}},["member_ID"])
+        print "Count of member documents with no following field:", no_followinglist_docs_cursor.count()
+
+    def _get_following_data(self, page):
+
+        soup = BS(page, "html.parser")
+
+        following_id_list = [a.attrs['data-ng-href'].split('/')[2] for a in collections.OrderedDict.fromkeys(soup.select('article.grid-col a.ng-scope')) if a.text != ' ']
+        following_names_list = [a.text.strip().replace(".","") for a in collections.OrderedDict.fromkeys(soup.select('article.grid-col a.ng-scope')) if a.text != ' ']
+        following_dict = dict(zip(following_names_list, following_id_list))
+
+        return (following_id_list, following_dict)
 
 
+    def get_members_followers(self):
+        """Get the ID and names of people followed by the members"""
+        no_followerslist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "followers_dict": {"$exists": False}}, ["member_ID", "followers_page"])
+        print "Count of member documents with no followers field:", no_followerslist_docs_cursor.count()
+
+        has_followerslist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "followers_dict": {"$exists": True}}, ["member_ID", "followers_page"])
+        print "Count of member documents with followers field:", has_followerslist_docs_cursor.count()
+
+        print "docs processed:"
+        for doc in no_followerslist_docs_cursor:
+            doc_followers_data = self._get_followers_data(doc['followers_page'])
+            self.members_coll.find_one_and_update({"member_ID": doc['member_ID']},
+                {"$set": {"followers_recipe_id_list": doc_followers_data[0],
+                          "followers_dict": doc_followers_data[1]}},
+                          upsert = True)
+            print doc['member_ID']
+        no_followerslist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
+                                                        "followers_dict": {"$exists": False}},["member_ID"])
+        print "Count of member documents with no followers field:", no_followerslist_docs_cursor.count()
+
+    def _get_followers_data(self, page):
+
+        soup = BS(page, "html.parser")
+
+        followers_id_list = [a.attrs['data-ng-href'].split('/')[2] for a in collections.OrderedDict.fromkeys(soup.select('article.grid-col a.ng-scope')) if a.text != ' ']
+        followers_names_list = [a.text.strip().replace(".","") for a in collections.OrderedDict.fromkeys(soup.select('article.grid-col a.ng-scope')) if a.text != ' ']
+        followers_dict = dict(zip(followers_names_list, followers_id_list))
+
+        return (followers_id_list, followers_dict)
 
     def get_page_from_list(self, urllist, collname, offset=0):
        """Given a list of urls, store page content in database
