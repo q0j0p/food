@@ -119,9 +119,20 @@ On the issue of nutrition,
 #### Concept
 - [Cooksmarts](https://www.cooksmarts.com/weekly-meal-plan-service/)  
 
-#### Modeling 
+#### Recommender modeling 
 - [Recipe recommendation using ingredient networks](http://lazerlab.net/publication/recipe-recommendation-using-ingredient-networks)
 - [Amazon fine food reviews](https://snap.stanford.edu/data/web-FineFoods.html) 
 
+#### Types of recommenders
+* recommendation based on content 
+* recommendation based on preferences 
+* collaborative filtering based on similarity 
 
+* Item item similarity * 
+
+#### User 'cold start' 
+
+Typical recommener systems need to deal with the cold start problem, whn user preferences are not known.  This isn't necessarily an issue for this recommender as a questionnaire is part of the onboarding process, and the outcome is exploratory.  
+
+#### User questionnaire 
 
