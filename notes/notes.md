@@ -127,16 +127,20 @@ On the issue of nutrition,
 #### Concept
 - [Cooksmarts](https://www.cooksmarts.com/weekly-meal-plan-service/)  
 
-#### Recommender modeling 
-- [Recipe recommendation using ingredient networks](http://lazerlab.net/publication/recipe-recommendation-using-ingredient-networks)
-- [Amazon fine food reviews](https://snap.stanford.edu/data/web-FineFoods.html) 
-
 #### Types of recommenders
 * recommendation based on content 
 * recommendation based on preferences 
 * collaborative filtering based on similarity 
 
+### Recommender modeling 
+* Explicit and implicit feedback 
+* UV Decomposition
+
+
 * Item item similarity * 
+
+* Matrix factorization 
+
 
 #### User 'cold start' 
 
@@ -147,3 +151,12 @@ Typical recommener systems need to deal with the cold start problem, whn user pr
 #### Recommeder evaluation 
 Recommenders are inherenty hard to validate.  In this application, validation is less crucial, but user feedback can be reintroduced as a factor in subsequent user iterations to derive a heuristic that meets the success criteria of the user in achieving a wholesome nutrition lifestyle.  
 
+
+- [Recipe recommendation using ingredient networks](http://lazerlab.net/publication/recipe-recommendation-using-ingredient-networks)
+- [Amazon fine food reviews](https://snap.stanford.edu/data/web-FineFoods.html) 
+
+## Data Processing 
+### Natural language processing 
+
+Build separate corpuses for review, recipe, about-me, conversations documents.  
+Construct tf-idf vectors 
