@@ -30,6 +30,14 @@ db.members.insert({"member_ID" : str member_ID,
                    "contacted" : list contacted})
 ```
 
+## Data collection 
+
+* The "community" page of allrecipes.com was scraped, generating > 4500 entries with > 900 unique members.  
+* The member's individual pages were scraped.  These have sections-- 'favorites', 'reviews', 'personal-recipes', 'made-it', 'followers', and 'following'.  
+* All recipes mentioned in these pages were scraped.  
+* Scraped data were parsed and pertinent data was extracted and stored in a MongoDB database.  
+
+
 ## AWS
 ### t2.micro instantiation, setup for scraping 
 Steps: 
@@ -135,4 +143,7 @@ On the issue of nutrition,
 Typical recommener systems need to deal with the cold start problem, whn user preferences are not known.  This isn't necessarily an issue for this recommender as a questionnaire is part of the onboarding process, and the outcome is exploratory.  
 
 #### User questionnaire 
+
+#### Recommeder evaluation 
+Recommenders are inherenty hard to validate.  In this application, validation is less crucial, but user feedback can be reintroduced as a factor in subsequent user iterations to derive a heuristic that meets the success criteria of the user in achieving a wholesome nutrition lifestyle.  
 
