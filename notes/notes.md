@@ -160,3 +160,7 @@ Recommenders are inherenty hard to validate.  In this application, validation is
 
 Build separate corpuses for review, recipe, about-me, conversations documents.  
 Construct tf-idf vectors 
+
+* Tokenize ingredients, use tf-idf to characterize recipes 
+
+
