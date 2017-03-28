@@ -11,6 +11,12 @@ import requests
 import pymongo
 import matplotlib.pyplot as plt
 import collections
+import os
+import boto3
+import pickle
+
+AWS_KEY = os.environ['AWS_ACCESS_KEY']
+AWS_SECRET = os.environ['AWS_SECRET_ACCESS_KEY']
 
 BASE_URL = 'http://allrecipes.com'
 MOGODB_NAME = "allrecipes"
@@ -18,9 +24,14 @@ MONGODB_URI = 'mongodb://localhost:27017/'
 
 class scraper(object):
     """
-    Simple scraper, namely for recipes using either selenium or PhantomJS
+    Simple scraper for the allrecipes.com website.
+
+    Methods
+    -------
+
+
     """
-    def __init__(self, base_url, dbname = MOGODB_NAME):
+    def __init__(self, base_url=BASE_URL, dbname = MOGODB_NAME):
 
         self.base_url = base_url
         try:
@@ -29,7 +40,8 @@ class scraper(object):
         except pymongo.errors.ConnectionFailure, e:
             print "Could not connect to MongoDB: %s".format(e)
         self.mongodbase = self.mongoclient[dbname]
-        self.members_coll = self.mongodbase['members'] # Does this work?
+        self.members_coll = self.mongodbase['members']
+        self.recipes_coll = self.mongodbase['recipes']
         self.browser = "Firefox"
 
     def get_community_members(self, num_pages=None, browser = "Firefox", url_path = "/ask-the-community"):
@@ -249,6 +261,7 @@ class scraper(object):
 #        return self.mongodbase['members'].find({"member_ID": memberid})
         return (madeit_recipe_ID_list, madeit_list_dict)
 
+
     def get_members_favorites(self):
         """Get member's 'made it' info"""
 
@@ -274,6 +287,7 @@ class scraper(object):
         no_favoriteslist_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
                                                         "favorites_dict": {"$exists": False}},["member_ID"])
         print "Count of member documents with no favorites field:", no_favoriteslist_docs_cursor.count()
+
 
     def _get_favorites_data(self, page):
 
@@ -308,6 +322,7 @@ class scraper(object):
                                                         "following_dict": {"$exists": False}},["member_ID"])
         print "Count of member documents with no following field:", no_followinglist_docs_cursor.count()
 
+
     def _get_following_data(self, page):
 
         soup = BS(page, "html.parser")
@@ -341,6 +356,7 @@ class scraper(object):
                                                         "followers_dict": {"$exists": False}},["member_ID"])
         print "Count of member documents with no followers field:", no_followerslist_docs_cursor.count()
 
+
     def _get_followers_data(self, page):
 
         soup = BS(page, "html.parser")
@@ -351,12 +367,54 @@ class scraper(object):
 
         return (followers_id_list, followers_dict)
 
-    def get_members_aboutme(self):
+
+    def get_members_aboutme_from_pkl(self, filename):
         """Get pertinent info from members' 'about me' section.  This section
         was scraped and pickled separate from the other sections.
-        ** used ad hoc notebook **
+
+        ** used ad hoc notebook for initial scrape**
+        Parameters
+        ----------
+        filename: str
+            pickle file of list of 'about me' pages
         """
-        pass
+        pages_list = pickle.load(open('filename', 'rb'))
+
+        for page in pages_list:
+            member_id, aboutme_text = self._get_aboutme_data(page)
+            members_coll.find_one_and_update({"member_ID": member_id},
+                                    {"$set": {"aboutme": aboutme_text}},
+                                    upsert = True)
+
+        print "members with about me page:",members_coll.find({"aboutme": {"$exists": True}}).count()
+        print "members without about me page:",members_coll.find({"aboutme": {"$exists": False}}).count()
+
+
+    def _get_aboutme_data(self, page):
+        """Given page, extract member_ID and 'about me' text.
+        """
+        soup = BS(page, "html.parser")
+        text = [a.text for a in soup.select('li.about-me--description.ng-binding')]
+        id = [a.attrs['href'].split('/')[2] \
+            for a in soup.select('div.profile-shell.full-page.ng-scope a.btns-two-small')][0]
+        return (id, text)
+
+    def get_recipe_pkl_page_from_aws(self, s3key):
+
+        session = boto3.Session(aws_access_key_id=AWS_KEY, aws_secret_access_key=AWS_SECRET)
+        s3 = session.resource('s3')
+        mybucket = s3.Bucket('ohailolcat')
+        for f in mybucket.objects.filter(Prefix='{}/'.format(s3key)):
+            fn = f.key.split('/')[1]
+            if (fn.startswith('recipe_')) & (fn[-4:] == ".pkl"):
+                recipe_ID = fn.split(".")[0][7:]
+                self.recipes_coll.find_one_and_update({"recipe_ID": recipe_ID},
+                                      {"$set": {"page": pickle.loads(f.get()['Body'].read())}},
+                                      upsert = True)
+                print "recipe {} added".format(recipe_ID)
+        print "recipes with page:",self.recipes_coll.find({"page": {"$exists": True}}).count()
+        print "recipes without page:",self.recipes_coll.find({"page": {"$exists": False}}).count()
+
 
     def get_recipe_data(self, page):
         """Given html document of a recipe, parse and output relevant fields
@@ -369,16 +427,19 @@ class scraper(object):
         Returns
         -------
         Tuple of strings corresponding to recipe data:
-
-
-
+        (recipe_name, description, ingredients_list, preptime, cooktime, \
+        readytime, directions_list, servings, rating, total_stars, total_reviews, \
+        nutrition_label, nutrition_servings, nutrition_servings, nutrition_info, \
+        nutrition_info, nutrition_elements)
         """
 
-        ingredients_list = [a.text.strip() \
-            for a in s.select("ul#lst_ingredients_1 li.checkList__line")]
+        recipe_name = [a.text for a in s.select("h1.recipe-summary__h1")]
+        description = [a.text.strip() for a in s.select("div.submitter__description")]
+        ingredients_list = [a.text \
+            for a in s.select("span.recipe-ingred_txt")][:-1]
         (preptime, cooktime, readytime) = [a.attrs['datetime'] \
             for a in s.select("div.directions--section time")]
-        directions = [a.text.strip() \
+        directions_list = [a.text.strip() \
             for a in s.select("ol.list-numbers.recipe-directions__list li.step")]
         servings = [a.text for a in s.select("span.servings-count")]
         (rating, total_stars, _, total_reviews) = [a.attrs['content'] \
