@@ -172,3 +172,5 @@ t2.doublexl instance isn't big enough for affinity propagation.
 m4.4xlarge is still not big enough 
 create tokenizer for tfidf to remove artifacts 
 
+**Attempts to perform affinity propagation were unscuccessful thus far-- failure to converge**  
+
