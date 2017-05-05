@@ -170,7 +170,7 @@ Construct tf-idf vectors
 
 t2.doublexl instance isn't big enough for affinity propagation.  
 m4.4xlarge is still not big enough 
-create tokenizer for tfidf to remove artifacts 
+this is partially due to bad tokenization of ingredients (permutations in spelling, etc.).  Create tokenizer for tfidf to remove artifacts and consolidate terms.  
 
 **Attempts to perform affinity propagation were unscuccessful thus far-- failure to converge**  
 
