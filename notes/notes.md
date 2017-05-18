@@ -45,8 +45,11 @@ Steps:
 [Instantiate EC2] 
 
 ssh -i ~/.ssh/jgalv2.pem  ubuntu@ec2-54-200-187-213.us-west-2.compute.amazonaws.com
+
 sudo apt-get install install mongodb 
+
 sudo apt install python-pip
+
 tmux 
 
 sudo apt-get update 
@@ -160,3 +163,17 @@ Recommenders are inherenty hard to validate.  In this application, validation is
 
 Build separate corpuses for review, recipe, about-me, conversations documents.  
 Construct tf-idf vectors 
+
+* Tokenize ingredients, use tf-idf to characterize recipes 
+
+## USDA nutritional database 
+
+- Create tfidf with ingredients list for each food item 
+- Evaluate tfidf feature matrix 
+- t2.doublexl instance isn't big enough for affinity propagation.  
+- m4.4xlarge is still not big enough 
+- this is partially due to bad tokenization of ingredients (permutations in spelling, etc.).  Create tokenizer for tfidf to remove artifacts and consolidate terms.  
+
+**Attempts to perform affinity propagation were unscuccessful thus far-- failure to converge**  
+
+
