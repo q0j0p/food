@@ -20,4 +20,6 @@ This project frames the health crisis as a data science problem and explores a p
  
 
 ## Data analysis and modeling
-* Code stored in [src/model](src/model/]
+Code stored in [src/model](src/model/)
+* EDA of USDA standard reference database 
+* Topic modeling of USDA branded items database 
