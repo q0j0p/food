@@ -21,3 +21,6 @@ This project frames the health crisis as a data science problem and explores a p
  * Recipes, member info stored as documents in respective collections 
  
 
+## Data analysis and modeling
+
+* Code stored in [src/model](src/model/]
