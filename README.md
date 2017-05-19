@@ -12,10 +12,12 @@ This project frames the health crisis as a data science problem and explores a p
 * Nutritional data of food items 
   * Collected from USDA [Food composition database](https://ndb.nal.usda.gov/ndb/search/list) with API 
   * code:[src/data/ndb_to_mongo.py](src/data/ndb_to_mongo.py)
-* Recipe data 
-  * Scraped from [allrecipes.com](https://allrecipes.com) using selenium
+* Recipe and user data 
+  * Recipes, ratings, member info scraped from [allrecipes.com](https://allrecipes.com) using selenium
   * code: [src/data/scraper.py](src/data/scraper.py)
   
 ### Data management 
 * Main storage in MongoDB nosql database.  
+ * Recipes, member info stored as documents in respective collections 
+ 
 
