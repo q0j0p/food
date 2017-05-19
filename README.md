@@ -10,7 +10,7 @@ This project frames the health crisis as a data science problem and explores a p
 
 ### Data requirements: 
 * Nutritional data of food items 
-  * Collected from USDA [Food composition database](https://ndb.nal.usda.gov/ndb/search/list) with API (code:[src/data/ndb_to_mongo.py]([src/data/ndb_to_mongo.py))
+  * Collected from USDA [Food composition database](https://ndb.nal.usda.gov/ndb/search/list) with API (code:[src/data/ndb_to_mongo.py](src/data/ndb_to_mongo.py))
 * Recipe data 
   * Scraped from [allrecipes.com](https://allrecipes.com) 
   
