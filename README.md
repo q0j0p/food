@@ -6,3 +6,13 @@ This project frames the health crisis as a data science problem and explores a p
 * [Presentation](https://docs.google.com/presentation/d/1vTqdFdSiJ_m-carGSUVMQn9V2vPaHaKSxM-NFZ9JN2A/edit?usp=sharing) 
 * [Notes](https://github.com/q0j0p/food_recommender/blob/master/notes/notes.md)
 
+## Data 
+
+### Data requirements: 
+* Nutritional data of food items 
+  * Collected from USDA [Food composition database](https://ndb.nal.usda.gov/ndb/search/list) with API (code:[src/data/ndb_to_mongo.py]([src/data/ndb_to_mongo.py))
+* Recipe data 
+  * Scraped from [allrecipes.com](https://allrecipes.com) 
+  
+### Data storage and management 
+
