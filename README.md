@@ -18,9 +18,10 @@ This project frames the health crisis as a data science problem and explores a p
 * Main storage in MongoDB nosql database.  
  * Recipes, member info stored as documents in respective collections 
  * Use of AWS/EC2 instances for scalability 
+  * [EC2_scraper.py](src/data/EC2_scraper.py)
  
 
-## Data analysis and modeling
+## Analysis and modeling
 Code stored in [src/model](src/model/)
 * EDA of USDA standard reference database 
 * Topic modeling of USDA branded items database 
