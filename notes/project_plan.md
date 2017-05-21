@@ -4,7 +4,7 @@
 1. Parse and load scraped data to database 
 1. Model topics and label data appropriately (USDA food items) 
 1. Devise generative methods for "healthy shifts" in food choice.  
-1. 
+1. Create schedule of weekly recipes that meet nutritional requirements 
 
 ## 
 
