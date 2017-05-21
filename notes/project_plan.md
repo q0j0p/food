@@ -1,31 +1,15 @@
 # Project Plan 
 
-## Data Collection 
-
-* collect the following datasets in mongoDB: 
-  - Amazon reviews 
-  - USDA Nutrition Database 
-  - Recipes 
-* Clean data 
-  - Remove duplicates 
-  
-## Data Processing and Evaluation 
-
-* Reorganize datasets: 
-  - Link food items to nutrients 
-  - Group reviews by user, food item 
-  
-* Evaluate data quality 
- 
- 
-
+1. Collect data by scraping and use of APIs 
+1. Parse and load to database 
+1. Model topics and label data appropriately  
 
 ## 
 
-- Cluster terms describing each food item.  
-
-## Create Minimum Viable Product 
 
 
+
+
+--- 
 
 ## Deploy Web App
