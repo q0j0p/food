@@ -1,4 +1,4 @@
-# Dynamic notes- routines, code snippets, etc. created during the project.  
+# Notes, code snippets, etc. taken during the project.  
 
 ## Data collection 
 
