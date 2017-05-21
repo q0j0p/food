@@ -19,7 +19,7 @@ This project frames the health crisis as a data science problem and explores a p
  * Recipes, member info stored as documents in respective collections 
  * Use of AWS/EC2 instances for scalability 
    * [EC2_scraper.py](src/data/EC2_scraper.py)
-   * Raw data stored in S3 bucket
+   * Scraped data stored in S3 bucket
  
  
 
