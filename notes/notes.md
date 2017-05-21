@@ -196,11 +196,9 @@ Construct tf-idf vectors
 * Parse recipe ingredient list 
 * 
 
-|---|---|---|
-|Source|Pages scraped |   |  |
-|---|---|---| 
-|allrecipes.com|   |   |   
-|USDA|   |   |
-|---|---|---|
-
-|
+||---|---|---||
+||Source|Pages scraped |   |  ||
+||---|---|---|| 
+||allrecipes.com|   |   ||
+||USDA|   |   ||
+||---|---|---||
