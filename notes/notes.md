@@ -181,8 +181,8 @@ Construct tf-idf vectors
 
 ### Issues
 
-* How meaningful / useful are the topics derived with LDA?  
-* Quantifiable definition of "healthy"
+- How meaningful / useful are the topics derived with LDA?  
+- What is a good, quantifiable definition of "healthy" or "wholesome"?  
 
 
 * Parse recipe ingredient list 
