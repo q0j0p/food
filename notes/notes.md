@@ -177,3 +177,13 @@ Construct tf-idf vectors
 **Attempts to perform affinity propagation were unscuccessful thus far-- failure to converge**  
 
 
+## Linking topics derived from LDA of USDA food items to recipes  
+
+### Issues
+
+* How meaningful / useful are the topics derived with LDA?  
+* Quantifiable definition of "healthy"
+
+
+* Parse recipe ingredient list 
+* 
