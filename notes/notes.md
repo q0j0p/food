@@ -177,13 +177,20 @@ Construct tf-idf vectors
 **Attempts to perform affinity propagation were unscuccessful thus far-- failure to converge**  
 
 
-## Linking topics derived from LDA of USDA food items to recipes  
 
 ### Issues
 
 - How meaningful / useful are the topics derived with LDA?  
 - What is a good, quantifiable definition of "healthy" or "wholesome"?  
+  - For each meal: 
+    - Use of whole ingredients 
+    - Less saturated fats 
+  - For weekly schedule of meals: 
+    - "balancing out" of nutritional requirements
+    - Complete nutrition 
 
+
+## Linking topics derived from LDA of USDA food items to recipes  
 
 * Parse recipe ingredient list 
 * 
