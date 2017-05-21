@@ -31,7 +31,6 @@ db.members.insert({"member_ID" : str member_ID,
                    "contacted" : list contacted})
 ```
 
-## Data collection 
 
 * The "community" page of allrecipes.com was scraped, generating > 4500 entries with > 900 unique members.  
 * The member's individual pages were scraped.  These have sections-- 'favorites', 'reviews', 'personal-recipes', 'made-it', 'followers', and 'following'.  
