@@ -1,3 +1,4 @@
+# Dynamic notes- routines, code snippets, etc. created during the project.  
 
 ## Data collection 
 
@@ -194,3 +195,12 @@ Construct tf-idf vectors
 
 * Parse recipe ingredient list 
 * 
+
+|---|---|---|
+|Source|Pages scraped |   | 
+|---|---|---| 
+|allrecipes.com|   |   |
+|USDA|   |   |
+|---|---|---|
+
+|
