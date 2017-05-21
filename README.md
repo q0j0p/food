@@ -12,10 +12,10 @@ This project frames the health crisis as a data science problem and explores a p
   * code:[src/data/ndb_to_mongo.py](src/data/ndb_to_mongo.py)
 * Recipe and user data 
   * Recipes, ratings, member info scraped from [allrecipes.com](https://allrecipes.com) using `selenium`
-  * code: [src/data/scraper.py](src/data/scraper.py)
+    * [src/data/scraper.py](src/data/scraper.py)
   
 ### Data management 
-* Main storage in MongoDB nosql database.  
+* Main storage in `MongoDB` nosql database.  
  * Recipes, member info stored as documents in respective collections 
  * Use of AWS/EC2 instances for scalability 
    * [EC2_scraper.py](src/data/EC2_scraper.py)
