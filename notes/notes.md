@@ -197,9 +197,9 @@ Construct tf-idf vectors
 * 
 
 |---|---|---|
-|Source|Pages scraped |   | 
+|Source|Pages scraped |   |  |
 |---|---|---| 
-|allrecipes.com|   |   |
+|allrecipes.com|   |   |   
 |USDA|   |   |
 |---|---|---|
 
