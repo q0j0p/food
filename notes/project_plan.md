@@ -9,6 +9,8 @@
 ## 
 
 
+1. Start with previous knowledge / simple models 
+1. Build and improve with iterations 
 
 --- 
 * Generate user questionnaire 
