@@ -1,4 +1,4 @@
-# Notes, code snippets, etc. taken during the project.  
+# Notes, code snippets, etc. taken during the project-- dynamic and unordered by nature 
 
 ## Data collection 
 
@@ -199,4 +199,11 @@ Construct tf-idf vectors
 |---|---|---|
 |allrecipes.com|   |   |
 |USDA|   |   |
+
+
+---
+## User onboarding 
+### Questionnaire 
+  * prompt user to list 1 week history of meals.  
+    * user rates each meal
 
