@@ -1,3 +1,4 @@
+# Notes, code snippets, etc. taken during the project-- dynamic and unordered by nature 
 
 ## Data collection 
 
@@ -30,7 +31,6 @@ db.members.insert({"member_ID" : str member_ID,
                    "contacted" : list contacted})
 ```
 
-## Data collection 
 
 * The "community" page of allrecipes.com was scraped, generating > 4500 entries with > 900 unique members.  
 * The member's individual pages were scraped.  These have sections-- 'favorites', 'reviews', 'personal-recipes', 'made-it', 'followers', and 'following'.  
@@ -194,3 +194,27 @@ Construct tf-idf vectors
 
 * Parse recipe ingredient list 
 * 
+
+|Source|Pages scraped |   |
+|---|---|---|
+|allrecipes.com|   |   |
+|USDA|   |   |
+
+
+---
+## User onboarding 
+### Questionnaire 
+  * prompt user to list 1 week history of meals.  
+    * user rates each meal
+
+
+## Parsing ingredients list 
+
+[This article](https://open.blogs.nytimes.com/2015/04/09/extracting-structured-data-from-recipes-using-conditional-random-fields/?_r=0) is insightful for parsing ingredients. 
+
+* The USDA branded items list contains list of ingredients for each food item, in a format typically seen on labels.  Use of punctuation is not consistent.  
+
+
+* Reipe datasets have ingredients lists that are typically composed of "quantity-unit-item" phrases.  
+
+
