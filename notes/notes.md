@@ -1,4 +1,5 @@
-# Notes, code snippets, etc. taken during the project-- dynamic and unordered by nature 
+# Notes, code snippets, etc. taken during the project
+--dynamic and unordered by nature 
 
 ## Data collection 
 
@@ -36,6 +37,10 @@ db.members.insert({"member_ID" : str member_ID,
 * The member's individual pages were scraped.  These have sections-- 'favorites', 'reviews', 'personal-recipes', 'made-it', 'followers', and 'following'.  
 * All recipes mentioned in these pages were scraped.  
 * Scraped data were parsed and pertinent data was extracted and stored in a MongoDB database.  
+
+## S3 storage 
+Initially, the mongoDB database running on my local machine was the main repository for scraped data.  But with the use of EC2 instances, an S3 bucket was used to store scraped pages, both as backup (having overwritten an entire mongoDB collection at least once) and as an intermediary between EC2 and the local machine. 
+
 
 
 ## AWS
@@ -215,6 +220,7 @@ Construct tf-idf vectors
 * The USDA branded items list contains list of ingredients for each food item, in a format typically seen on labels.  Use of punctuation is not consistent.  
 
 
-* Reipe datasets have ingredients lists that are typically composed of "quantity-unit-item" phrases.  
+* Recipe datasets have ingredients lists that are typically composed of "quantity-unit-item" phrases.  
+
 
 
