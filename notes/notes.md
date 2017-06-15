@@ -1,4 +1,5 @@
-# Notes, code snippets, etc. taken during the project-- dynamic and unordered by nature 
+# Notes, code snippets, etc. taken during the project
+--dynamic and unordered by nature 
 
 ## Data collection 
 
