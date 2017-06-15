@@ -38,6 +38,8 @@ db.members.insert({"member_ID" : str member_ID,
 * All recipes mentioned in these pages were scraped.  
 * Scraped data were parsed and pertinent data was extracted and stored in a MongoDB database.  
 
+## S3 storage 
+Initially, the mongoDB database running on my local machine was the main repository for scraped data.  But with the use of EC2 instances, an S3 bucket was used to store scraped pages, both as backup (having overwritten an entire mongoDB collection at least once) and as an intermediary between EC2 and the local machine. 
 
 ## AWS
 ### t2.micro instantiation, setup for scraping 
