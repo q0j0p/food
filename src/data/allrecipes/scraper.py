@@ -31,7 +31,7 @@ class Scraper(object):
 
 
     """
-    def __init__(self, base_url=BASE_URL, dbname = MOGODB_NAME):
+    def __init__(self, base_url=BASE_URL, dbname = MOGODB_NAME, browser= "Firefox"):
 
         self.base_url = base_url
         try:
@@ -42,9 +42,16 @@ class Scraper(object):
         self.mongodbase = self.mongoclient[dbname]
         self.members_coll = self.mongodbase['members']
         self.recipes_coll = self.mongodbase['recipes']
-        self.browser = "Firefox"
+        self.browser = browser
+        if self.browser == "Firefox":
+            self.use_firefox()
+        elif self.browser == "Phantom":
+            self.use_phantom()
 
-    def get_community_page_scrolled(self, num_pages=None, browser = "Firefox", url_path = "/recipes/84/healthy-recipes/"):
+    def get_community_page_scrolled(self,
+            num_pages=None,
+            browser = "Firefox",
+            url_path = "/recipes/84/healthy-recipes/"):
         """Access community page using selenium and scrape, scroll down and click.
         Store entire page in database.
 
@@ -60,8 +67,8 @@ class Scraper(object):
         Returns
         -------
         self.community_page: pymongo.collection.Collection
-
         """
+
         # Set URL
         url = self.base_url + url_path
         if browser == "Firefox":
@@ -270,9 +277,13 @@ class Scraper(object):
         client = pymongo.MongoClient(MONGODB_URI)
         members_coll = client.allrecipes.members
 
-        noreviews_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
-                                                        "reviews": {"$exists": False}}, ["member_ID", "reviews_page"])
-        print "Count of member documents with no reviews field:", noreviews_docs_cursor.count()
+        noreviews_docs_cursor = self.members_coll.find(
+            {"member_ID": {"$exists":True},
+                "reviews": {"$exists": False}},
+                ["member_ID", "reviews_page"]
+                )
+        print "Count of member documents with no reviews field:", \
+            noreviews_docs_cursor.count()
 
         print "docs processed:"
         for doc in noreviews_docs_cursor:
@@ -282,9 +293,12 @@ class Scraper(object):
                           "reviews_dict": doc_reviews_data[1]}},
                           upsert = True)
             print doc['member_ID']
-        noreviews_docs_cursor = self.members_coll.find({"member_ID": {"$exists":True},
-                                                        "reviews": {"$exists": False}},["member_ID"])
-        print "Count of member documents with no reviews field:", noreviews_docs_cursor.count()
+
+        noreviews_docs_cursor = self.members_coll.find(
+            {"member_ID": {"$exists":True},
+                "reviews": {"$exists": False}},["member_ID"])
+        print "Count of member documents with no reviews field:",\
+            noreviews_docs_cursor.count()
 
 
     def _get_reviews_data(self, page):
@@ -648,10 +662,10 @@ class Scraper(object):
 
 
     def use_phantom(self):
-        self.driver = webdriver.PhantomJS()
-
-        coll = self.mongodbase['members']
-        pass
+        dcap["phantomjs.page.settings.userAgent"] = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML,\
+            like Gecko) Chrome/56.0.2924.76 Safari/537.36/")
+        self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
 
 
 def get_recipe_ids(self):
