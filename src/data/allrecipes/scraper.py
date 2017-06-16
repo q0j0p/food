@@ -662,6 +662,7 @@ class Scraper(object):
 
 
     def use_phantom(self):
+        dcap = {}
         dcap["phantomjs.page.settings.userAgent"] = (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML,\
             like Gecko) Chrome/56.0.2924.76 Safari/537.36/")
