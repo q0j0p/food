@@ -87,7 +87,8 @@ restore tmux after computer reboot: `tmux a`
 `sudo apt-get install libfontconfig`
 
 ### To get matplotlib to work: 
-```pip uninstall matplotlib           //unistall matplotlib
+```
+pip uninstall matplotlib           //unistall matplotlib
 apt-get build-dep matplotlib       //download and build needed dependencies
 pip install -U matplotlib          //force matplotlib rebuild
 ```
