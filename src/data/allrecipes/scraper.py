@@ -19,25 +19,22 @@ AWS_KEY = os.environ['AWS_ACCESS_KEY']
 AWS_SECRET = os.environ['AWS_SECRET_ACCESS_KEY']
 
 BASE_URL = 'http://allrecipes.com'
-MOGODB_NAME = "allrecipes"
+MONGODB_NAME = "allrecipes"
 MONGODB_URI = 'mongodb://localhost:27017/'
 
 class Scraper(object):
     """
     Simple scraper for the allrecipes.com website.
 
-    Methods
-    -------
-
 
     """
-    def __init__(self, base_url=BASE_URL, dbname = MOGODB_NAME, browser= "Firefox"):
+    def __init__(self, base_url=BASE_URL, dbname = MONGODB_NAME, browser= "Firefox"):
 
         self.base_url = base_url
         try:
             self.mongoclient = pymongo.MongoClient(MONGODB_URI)
             print "Connected to {}".format(MONGODB_URI)
-        except pymongo.errors.ConnectionFailure, e:
+        except pymongo.errors.ConnectionFailure as e:
             print "Could not connect to MongoDB: %s".format(e)
         self.mongodbase = self.mongoclient[dbname]
         self.members_coll = self.mongodbase['members']
@@ -47,6 +44,23 @@ class Scraper(object):
             self.use_firefox()
         elif self.browser == "Phantom":
             self.use_phantom()
+
+
+    def use_firefox(self):
+        self.driver = webdriver.Firefox(firefox_binary=FirefoxBinary(
+        firefox_path='/Applications/FirefoxESR.app/Contents/MacOS/firefox'))
+
+        #firefox_browser.quit()
+
+
+    def use_phantom(self):
+        dcap = {}
+        dcap["phantomjs.page.settings.userAgent"] = (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML,\
+            like Gecko) Chrome/56.0.2924.76 Safari/537.36/")
+#        self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
+        self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
+
 
     def get_community_page_scrolled(self,
             num_pages=None,
@@ -119,8 +133,6 @@ class Scraper(object):
         """
         # Set URL
         url = self.base_url + url_path
-        if browser == "Firefox":
-            self.use_firefox()
         # Load URL on browser
         self.driver.get(url)
         # In allrecipes, I need to scroll down 3 times, then click on "more" button.
@@ -151,50 +163,6 @@ class Scraper(object):
         self.driver.close()
         return self.community_page
 
-    def check_member_records(self, member_ID):
-        """Check for completeness of member_ID's records"""
-        member_list = list(self.members_coll.find({"member_ID":member_ID}))
-        if len(member_list) != 1:
-            print "Error: Number of documents (mongodb) for {} is {}.".format(member_ID, len(member_list))
-        else:
-            record = member_list[0]
-        if record.get('followers_dict'):
-            followers = len(record.get('followers_dict'))
-        else:
-            followers = None
-        if record.get('following_dict'):
-            following = len(record.get('following_dict'))
-        else:
-            following = None
-        if record.get('reviews_dict'):
-            reviews = len(record.get('reviews_dict'))
-        else:
-            reviews = None
-        if record.get('favorites_dict'):
-            favorites = len(record.get('favorites_dict'))
-        else:
-            favorites = None
-        if record.get('madeits_dict'):
-            madeits = len(record.get('madeits_dict'))
-        else:
-            madeits = None
-
-        print """
-             member_ID is {}
-             has "about me" page: {}
-             number of followers: {}
-             number of followed: {}
-             number of reviews: {}
-             number of favorites: {}
-             number of recipes made: {}
-             """.format(record['member_ID'],
-                        bool(record['aboutme']),
-                        followers,
-                        following,
-                        reviews,
-                        favorites,
-                        madeits
-                        )
 
     def get_member_pages(self, memberid):
         """Given member ID, get all pertinent pages directly from member webpage
@@ -264,6 +232,125 @@ class Scraper(object):
              upsert = True)
 
         return member_pages_coll
+
+
+    def get_page_from_list(self, urllist, collname, offset=0):
+       """Given a list of urls, store page content in database
+
+       Parameters
+       ----------
+       urllist : list
+           List of urls.
+       offset : int
+           in case of interruption, start from offset index
+       collname : str
+           name of collection
+
+       Returns
+       -------
+       None
+
+       """
+
+       for i,link in enumerate(urllist[offset:]):
+            self.driver.get(link)
+            print "list item number {}, {}\n".format(i+offset,link)
+            page = self.driver.page_source
+            self.mongodbase[collname].insert_one({'link': link,
+                                  'page': page})
+            time.sleep(5 + random.random() * 5)
+
+
+
+#=======================================================
+
+class Parser(object):
+    """Uses scraped pages to parse data and populate individual records (members, recipes).
+
+    """
+    def __init__(self, dbname=MONGODB_NAME):
+        try:
+            self.mongoclient = pymongo.MongoClient(MONGODB_URI)
+            self.mongodbase = self.mongoclient[dbname]
+            print "Connected to {}".format(self.mongodbase)
+        except pymongo.errors.ConnectionFailure as e:
+            print "Could not connect to MongoDB: %s".format(e)
+        self.member_pages_coll = self.mongodbase['member_pages']
+        self.members_coll = self.mongodbase['members']
+        self.recipes_coll = self.mongodbase['recipes']
+        self.about_coll = self.mongodbase['about']
+
+        print "number of member_pages:", self.member_pages_coll.count()
+        print "number of docs with member_IDs:", self.members_coll.find({'member_ID':{"$exists":True}}).count()
+        print "number of docs with followers_dict", self.members_coll.find({'followers_dict':{"$exists":True}}).count()
+        print "number of docs with following_dict", self.members_coll.find({'following_dict':{"$exists":True}}).count()
+        print "number of docs with reviews_dict", self.members_coll.find({'reviews_dict':{"$exists":True}}).count()
+        print "number of docs with favorites_dict", self.members_coll.find({'favorites_dict':{"$exists":True}}).count()
+        print "number of docs with madeits_dict", self.members_coll.find({'madeits_dict':{"$exists":True}}).count()
+        print "number of docs with aboutme", self.members_coll.find({'aboutme':{"$exists":True}}).count()
+
+
+    def check_member_records(self, member_ID):
+        """Check for completeness of member_ID's records"""
+        member_list = list(self.members_coll.find({"member_ID":member_ID}))
+        if len(member_list) != 1:
+            print "Error: Number of documents (mongodb) for {} is {}.".format(member_ID, len(member_list))
+        else:
+            record = member_list[0]
+        if record.get('followers_dict'):
+            followers = len(record.get('followers_dict'))
+        else:
+            followers = None
+        if record.get('following_dict'):
+            following = len(record.get('following_dict'))
+        else:
+            following = None
+        if record.get('reviews_dict'):
+            reviews = len(record.get('reviews_dict'))
+        else:
+            reviews = None
+        if record.get('favorites_dict'):
+            favorites = len(record.get('favorites_dict'))
+        else:
+            favorites = None
+        if record.get('madeits_dict'):
+            madeits = len(record.get('madeits_dict'))
+        else:
+            madeits = None
+
+        print """
+             member_ID is {}
+             has "about me" page: {}
+             number of followers: {}
+             number of followed: {}
+             number of reviews: {}
+             number of favorites: {}
+             number of recipes made: {}
+             """.format(record['member_ID'],
+                        bool(record['aboutme']),
+                        followers,
+                        following,
+                        reviews,
+                        favorites,
+                        madeits
+                        )
+
+
+    def get_member_list_to_parse(self):
+        """Obtain a list of member_IDs in member_pages_coll that are not in members_coll"""
+        memlist = set([a['member_ID'] for a in self.member_pages_coll.find()]) - set([a['member_ID'] for a in self.members_coll.find()])
+        print "Number of reords to get:", len(memlist)
+        self.mems_to_parse = list(memlist)
+        self.about_coll.update_one({'members_to_parse':{'$exists':True}}, {'$set':{'members_to_parse':list(memlist)}}, upsert=True)
+
+
+    def get_member_parsed_data(self, memberID=None):
+        """Given memberID, parse data from member_pages_coll and return list of data"""
+        self.check_member_records(memberID)
+        member_doc_keys = [u'favorites_page', u'following_page', u'reviews_page', u'aboutme_page', u'madeit_page', u'link',
+                           u'member_ID', u'followers_page', u'_id', u'recipes_page']
+
+        self.members_coll.find_one
 
     def get_members_reviews(self):
         """Populate member's 'review' data in 'allrecipes.members' collection by processing
@@ -606,47 +693,6 @@ class Scraper(object):
                 servings_config, nutrition_servings_info, nutrition_info, nutrition_elements)
 
 
-    def get_page_from_list(self, urllist, collname, offset=0):
-       """Given a list of urls, store page content in database
-
-       Parameters
-       ----------
-       urllist : list
-           List of urls.
-       offset : int
-           in case of interruption, start from offset index
-       collname : str
-           name of collection
-
-       Returns
-       -------
-       None
-
-       """
-
-       for i,link in enumerate(urllist[offset:]):
-            self.driver.get(link)
-            print "list item number {}, {}\n".format(i+offset,link)
-            page = self.driver.page_source
-            self.mongodbase[collname].insert_one({'link': link,
-                                  'page': page})
-            time.sleep(5 + random.random() * 5)
-
-
-    def populate_members(self, coll, ):
-        """
-        Given a member_ID, populate document of member (favirites,
-        madeit, reviews, recipes, followers, following)
-        """
-        pass
-
-
-    def check_dbase():
-        """
-        Check database stats
-        """
-
-        print self.mongodbase
 
 
     def get_html(self, browser="firefox"):
@@ -654,20 +700,7 @@ class Scraper(object):
         """
         pass
 
-    def use_firefox(self):
-        self.driver = webdriver.Firefox(firefox_binary=FirefoxBinary(
-        firefox_path='/Applications/FirefoxESR.app/Contents/MacOS/firefox'))
 
-        #firefox_browser.quit()
-
-
-    def use_phantom(self):
-        dcap = {}
-        dcap["phantomjs.page.settings.userAgent"] = (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML,\
-            like Gecko) Chrome/56.0.2924.76 Safari/537.36/")
-#        self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
-        self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
 
 
 def get_recipe_ids(self):
