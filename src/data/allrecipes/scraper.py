@@ -347,8 +347,16 @@ class Parser(object):
     def get_member_parsed_data(self, memberID=None):
         """Given memberID, parse data from member_pages_coll and return list of data"""
         self.check_member_records(memberID)
-        member_doc_keys = [u'favorites_page', u'following_page', u'reviews_page', u'aboutme_page', u'madeit_page', u'link',
-                           u'member_ID', u'followers_page', u'_id', u'recipes_page']
+        member_doc_keys = ['favorites_page', 'following_page', 'reviews_page',
+                           'aboutme_page', 'madeit_page', 'link',
+                           'followers_page', '_id', 'recipes_page']
+        thismember_list = list(self.members_coll.find({'member_ID':memberID},member_doc_keys))
+        if len(thismember_list) != 1:
+            raise Error:  "number of docs for member {} is not one".format(member_ID)
+        thismember = thismember_list[0]
+
+        for a in member_doc_keys:
+                if thismember[a]
 
         self.members_coll.find_one
 
