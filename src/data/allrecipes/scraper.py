@@ -294,7 +294,7 @@ class Parser(object):
         """Check for completeness of member_ID's records"""
         member_list = list(self.members_coll.find({"member_ID":member_ID}))
         if len(member_list) != 1:
-            print "Error: Number of documents (mongodb) for {} is {}.".format(member_ID, len(member_list))
+            raise ValueError,  "Error: Number of documents (mongodb) for {} is {}.".format(member_ID, len(member_list))
         else:
             record = member_list[0]
         if record.get('followers_dict'):
@@ -327,7 +327,7 @@ class Parser(object):
              number of favorites: {}
              number of recipes made: {}
              """.format(record['member_ID'],
-                        bool(record['aboutme']),
+                        bool(record.get('aboutme')),
                         followers,
                         following,
                         reviews,
@@ -343,20 +343,43 @@ class Parser(object):
         self.mems_to_parse = list(memlist)
         self.about_coll.update_one({'members_to_parse':{'$exists':True}}, {'$set':{'members_to_parse':list(memlist)}}, upsert=True)
 
+        # Store list in S3
+        session = boto3.Session(aws_access_key_id=AWS_KEY, aws_secret_access_key=AWS_SECRET)
+        s3 = session.resource('s3')
+        mybucket = s3.Bucket('ohailolcat')
+
+        with open('members_to_scrape.json', 'w') as f:
+            json.dump({"members_to_scrape":self.mems_to_parse}, f)
+        # Upload to S3
+        mybucket.upload_file('members_to_scrape.json', 'members/to_scrape.json')
 
     def get_member_parsed_data(self, memberID=None):
         """Given memberID, parse data from member_pages_coll and return list of data"""
+        doc_count = self.member_pages_coll.find({"member_ID":memberID}).count()
+        print "Number of scraped pages for {}: {}".format(memberID,doc_count)
+        if doc_count == 1:
+            print self.member_pages_coll.find_one({'member_ID':memberID}).keys()
+
+        if not self.members_coll.find_one({'member_ID':memberID}):
+            self.members_coll.insert_one({"member_ID":memberID}, )
         self.check_member_records(memberID)
-        member_doc_keys = ['favorites_page', 'following_page', 'reviews_page',
-                           'aboutme_page', 'madeit_page', 'link',
-                           'followers_page', '_id', 'recipes_page']
+        member_doc_keys = ['reviews_dict_list', 'favorites_dict', 'following_recipe_id_list',
+                           'favorites_recipe_id_list', 'madeits_dict',
+                           'aboutme', 'madeits_recipe_id_list', 'reviews_recipe_id_list',
+                           'following_dict','followers_dict','link','review_recipe_id_list',
+                           'followers_recipe_id_list', 'reviews_dict', 'member_ID']
         thismember_list = list(self.members_coll.find({'member_ID':memberID},member_doc_keys))
         if len(thismember_list) != 1:
-            raise Error:  "number of docs for member {} is not one".format(member_ID)
+            raise Error,  "number of docs for member {} is not one".format(memberID)
         thismember = thismember_list[0]
 
-        for a in member_doc_keys:
-                if thismember[a]
+        if not thismember.get('reviews_recipe_id_list'):
+            reviews_data = self.get_reviews_data(self.member_pages_coll.find_one({"member_ID":thismember["member_ID"]})['reviews_page'])
+            self.members_coll.find_one_and_update({'member_ID':memberID},
+                {'$set': {"reviews_recipe_id_list": reviews_data[0],
+                          "reviews_dict": reviews_data[1]}}, upsert = True)
+        #if not thismember['']
+
 
         self.members_coll.find_one
 
@@ -382,7 +405,7 @@ class Parser(object):
 
         print "docs processed:"
         for doc in noreviews_docs_cursor:
-            doc_reviews_data = self._get_reviews_data(doc['reviews_page'])
+            doc_reviews_data = self.get_reviews_data(doc['reviews_page'])
             members_coll.find_one_and_update({"member_ID": doc['member_ID']},
                 {"$set": {"reviews_recipe_id_list": doc_reviews_data[0],
                           "reviews_dict": doc_reviews_data[1]}},
@@ -396,7 +419,7 @@ class Parser(object):
             noreviews_docs_cursor.count()
 
 
-    def _get_reviews_data(self, page):
+    def get_reviews_data(self, page):
 
             soup = BS(page, "html.parser")
 
@@ -436,7 +459,7 @@ class Parser(object):
 
         print "docs processed:"
         for doc in no_madeitlist_docs_cursor:
-            doc_madeits_data = self._get_madeits_data(doc['madeit_page'])
+            doc_madeits_data = self.get_madeits_data(doc['madeit_page'])
             members_coll.find_one_and_update({"member_ID": doc['member_ID']},
                 {"$set": {"madeits_recipe_id_list": doc_madeits_data[0],
                           "madeits_dict": doc_madeits_data[1]}},
@@ -447,7 +470,7 @@ class Parser(object):
         print "Count of member documents with no madeits field:", no_madeitlist_docs_cursor.count()
 
 
-    def _get_madeits_data(self, page):
+    def get_madeits_data(self, page):
         """Extract 'made it' information from page"""
 
         soup = BS(page, "html.parser")
@@ -479,7 +502,7 @@ class Parser(object):
 
         print "docs processed:"
         for doc in no_favoriteslist_docs_cursor:
-            doc_favorites_data = self._get_favorites_data(doc['favorites_page'])
+            doc_favorites_data = self.get_favorites_data(doc['favorites_page'])
             self.members_coll.find_one_and_update({"member_ID": doc['member_ID']},
                 {"$set": {"favorites_recipe_id_list": doc_favorites_data[0],
                           "favorites_dict": doc_favorites_data[1]}},
@@ -490,7 +513,7 @@ class Parser(object):
         print "Count of member documents with no favorites field:", no_favoriteslist_docs_cursor.count()
 
 
-    def _get_favorites_data(self, page):
+    def get_favorites_data(self, page):
 
         soup = BS(page, "html.parser")
 
@@ -513,7 +536,7 @@ class Parser(object):
 
         print "docs processed:"
         for doc in no_followinglist_docs_cursor:
-            doc_following_data = self._get_following_data(doc['following_page'])
+            doc_following_data = self.get_following_data(doc['following_page'])
             self.members_coll.find_one_and_update({"member_ID": doc['member_ID']},
                 {"$set": {"following_recipe_id_list": doc_following_data[0],
                           "following_dict": doc_following_data[1]}},
@@ -524,7 +547,7 @@ class Parser(object):
         print "Count of member documents with no following field:", no_followinglist_docs_cursor.count()
 
 
-    def _get_following_data(self, page):
+    def get_following_data(self, page):
 
         soup = BS(page, "html.parser")
 
@@ -547,7 +570,7 @@ class Parser(object):
 
         print "docs processed:"
         for doc in no_followerslist_docs_cursor:
-            doc_followers_data = self._get_followers_data(doc['followers_page'])
+            doc_followers_data = self.get_followers_data(doc['followers_page'])
             self.members_coll.find_one_and_update({"member_ID": doc['member_ID']},
                 {"$set": {"followers_recipe_id_list": doc_followers_data[0],
                           "followers_dict": doc_followers_data[1]}},
@@ -558,7 +581,7 @@ class Parser(object):
         print "Count of member documents with no followers field:", no_followerslist_docs_cursor.count()
 
 
-    def _get_followers_data(self, page):
+    def get_followers_data(self, page):
 
         soup = BS(page, "html.parser")
 
@@ -582,7 +605,7 @@ class Parser(object):
         pages_list = pickle.load(open('filename', 'rb'))
 
         for page in pages_list:
-            member_id, aboutme_text = self._get_aboutme_data(page)
+            member_id, aboutme_text = self.get_aboutme_data(page)
             members_coll.find_one_and_update({"member_ID": member_id},
                                     {"$set": {"aboutme": aboutme_text}},
                                     upsert = True)
@@ -591,7 +614,7 @@ class Parser(object):
         print "members without about me page:",members_coll.find({"aboutme": {"$exists": False}}).count()
 
 
-    def _get_aboutme_data(self, page):
+    def get_aboutme_data(self, page):
         """Given page, extract member_ID and 'about me' text.
         """
         soup = BS(page, "html.parser")
@@ -631,7 +654,7 @@ class Parser(object):
         print "Count of recipe documents with no recipe data:", has_recipedata_docs_cursor.count()
 
         for doc in no_recipedata_docs_cursor:
-            doc_recipe_data = self._get_recipe_data(doc['page'])
+            doc_recipe_data = self.get_recipe_data(doc['page'])
             self.recipes_coll.find_one_and_update({"recipe_ID": doc['recipe_ID']},
                 {"$set": {"name": doc_recipe_data[0],
                           "description": doc_recipe_data[1],
@@ -651,7 +674,7 @@ class Parser(object):
         print "Count of member documents with no recipe name field:", no_recipedata_docs_cursor.count()
 
 
-    def _get_recipe_data(self, page):
+    def get_recipe_data(self, page):
         """Given html document of a recipe, parse and output relevant fields.
 
         Parameters
