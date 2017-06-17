@@ -89,6 +89,12 @@ restore tmux after computer reboot: `tmux a`
 
 On EC2 instance ([ref](https://www.codeammo.com/article/install-phantomjs-amazon-linux))
 
+** Make sure phantomjs version is up to date (currently 2.1.1)! ** 
+
+
+### Configuration 
+
+
 ### To get matplotlib to work[ref](https://askubuntu.com/questions/276281/how-do-i-configure-matplotlib-to-work-on-ec2): 
 ```
 pip uninstall matplotlib           //unistall matplotlib
