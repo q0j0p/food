@@ -87,6 +87,8 @@ restore tmux after computer reboot: `tmux a`
 - Fix for error ( cannot open shared object file: No such file or directory): 
 `sudo apt-get install libfontconfig`
 
+On EC2 instance ([ref](https://www.codeammo.com/article/install-phantomjs-amazon-linux))
+
 ### To get matplotlib to work[ref](https://askubuntu.com/questions/276281/how-do-i-configure-matplotlib-to-work-on-ec2): 
 ```
 pip uninstall matplotlib           //unistall matplotlib
