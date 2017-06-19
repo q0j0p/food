@@ -5,6 +5,7 @@ import time
 from urllib import urlencode
 from selenium import webdriver
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from bs4 import BeautifulSoup as BS
 import random
 import requests
@@ -14,6 +15,7 @@ import collections
 import os
 import boto3
 import pickle
+import json
 
 AWS_KEY = os.environ['AWS_ACCESS_KEY']
 AWS_SECRET = os.environ['AWS_SECRET_ACCESS_KEY']
@@ -54,12 +56,16 @@ class Scraper(object):
 
 
     def use_phantom(self):
-        dcap = {}
+        dcap = dict(DesiredCapabilities.PHANTOMJS)
+        #settings to emulate my machine, which works
         dcap["phantomjs.page.settings.userAgent"] = (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML,\
             like Gecko) Chrome/56.0.2924.76 Safari/537.36/")
 #        self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
         self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
+        self.driver.implicity_wait(10)
+        self.driver.set_window_size(839,937)
+
 
 
     def get_community_page_scrolled(self,
@@ -164,7 +170,7 @@ class Scraper(object):
         return self.community_page
 
 
-    def get_member_pages(self, memberid):
+    def get_member_pages(self, memberid, pause=False):
         """Given member ID, get all pertinent pages directly from member webpage
         and insert into member's MongoDB document.
 
