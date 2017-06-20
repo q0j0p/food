@@ -52,8 +52,6 @@ class Scraper(object):
         self.driver = webdriver.Firefox(firefox_binary=FirefoxBinary(
         firefox_path='/Applications/FirefoxESR.app/Contents/MacOS/firefox'))
 
-        #firefox_browser.quit()
-
 
     def use_phantom(self):
         dcap = dict(DesiredCapabilities.PHANTOMJS)
@@ -65,7 +63,6 @@ class Scraper(object):
         self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
         self.driver.implicity_wait(10)
         self.driver.set_window_size(839,937)
-
 
 
     def get_community_page_scrolled(self,
@@ -359,6 +356,7 @@ class Parser(object):
         # Upload to S3
         mybucket.upload_file('members_to_scrape.json', 'members/to_scrape.json')
 
+
     def get_member_parsed_data(self, memberID=None):
         """Given memberID, parse data from member_pages_coll and return list of data"""
         doc_count = self.member_pages_coll.find({"member_ID":memberID}).count()
@@ -379,15 +377,36 @@ class Parser(object):
             raise Error,  "number of docs for member {} is not one".format(memberID)
         thismember = thismember_list[0]
 
-        if not thismember.get('reviews_recipe_id_list'):
-            reviews_data = self.get_reviews_data(self.member_pages_coll.find_one({"member_ID":thismember["member_ID"]})['reviews_page'])
-            self.members_coll.find_one_and_update({'member_ID':memberID},
-                {'$set': {"reviews_recipe_id_list": reviews_data[0],
-                          "reviews_dict": reviews_data[1]}}, upsert = True)
-        #if not thismember['']
+        thismember_pages = self.member_pages_coll.find_one({"member_ID":thismember["member_ID"]})
 
+        data = {}
+        if not thismember.get('reviews_dict'):
+            data['reviews_data'] = self.get_reviews_data(thismember_pages['reviews_page'])
+        if not thismember.get('favorites_dict'):
+            data['favorites_data'] = self.get_favorites_data(thismember_pages['favorites_page'])
+        if not thismember.get('following_dict'):
+            data['following_data'] = self.get_following_data(thismember_pages['following_page'])
+        if not thismember.get('madeits_dict'):
+            data['madeit_data'] = self.get_madeits_data(thismember_pages['madeit_page'])
+        if not thismember.get('aboutme'):
+            data['aboutme_data'] = self.get_madeits_data(thismember_pages['aboutme_page'])
+        if not thismember.get('followers_dict'):
+            data['followers_data'] = self.get_followers_data(thismember_pages['followers_page'])
 
-        self.members_coll.find_one
+        self.members_coll.find_one_and_update({'member_ID':memberID},
+            {'$set': {"reviews_recipe_id_list": data["reviews_data"][0],
+                      "reviews_dict": data["reviews_data"][1],
+                      "favorites_recipe_id_list": data["favorites_data"][0],
+                      "favorites_dict": data["favorites_data"][1],
+                      "followers_recipe_id_list": data["followers_data"][0],
+                      "followers_dict": data["followers_data"][1],
+                      "following_recipe_id_list": data["following_data"][0],
+                      "following_dict": data["following_data"][1],
+                      "following_recipe_id_list": data["following_data"][0],
+                      "madeits_recipe_id_list": data["madeit_data"][0],
+                      "madeits_dict": data["madeit_data"][1], "
+                      }}, upsert = True)
+
 
     def get_members_reviews(self):
         """Populate member's 'review' data in 'allrecipes.members' collection by processing
