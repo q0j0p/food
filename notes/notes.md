@@ -42,9 +42,10 @@ db.members.insert({"member_ID" : str member_ID,
 ## S3 storage 
 Initially, the mongoDB database running on my local machine was the main repository for scraped data.  But with the use of EC2 instances, an S3 bucket was used to store scraped pages, both as backup (having overwritten an entire mongoDB collection at least once) and as an intermediary between EC2 and the local machine. 
 
+- path `member_pages/` corresponds to allrecipes_db.member_pages collection.  
 
 
-## AWS
+## AWS EC2 
 ### t2.micro instantiation, setup for scraping 
 Steps: 
 
@@ -94,16 +95,13 @@ On EC2 instance ([ref](https://www.codeammo.com/article/install-phantomjs-amazon
 
 ** Make sure phantomjs version is up to date (currently 2.1.1)! ** 
 
-
-### Configuration 
-
-
 ### To get matplotlib to work[ref](https://askubuntu.com/questions/276281/how-do-i-configure-matplotlib-to-work-on-ec2): 
 ```
 pip uninstall matplotlib           //unistall matplotlib
 apt-get build-dep matplotlib       //download and build needed dependencies
 pip install -U matplotlib          //force matplotlib rebuild
 ```
+
 
 ## Web app development  
 * `'flask'`- python based micro framework for web applications
