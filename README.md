@@ -1,6 +1,6 @@
+This project is an attempt to pose a pervasive social concern in a data science framework and provide insight using appropriate tools.  
 
 
-This project frames the health crisis as a data science problem and explores a practical, "data driven" solution in the form of a recipe recommendation system.   
 
 ## Documentation 
 * [Project proposal](https://docs.google.com/document/d/1fyTX7zHu0Tg92daD9yG4MbEVNJWpAo9V0dDwW1b2xGA/edit?usp=sharing) morphing into project report
