@@ -285,6 +285,7 @@ class Parser(object):
         self.recipes_coll = self.mongodbase['recipes']
         self.about_coll = self.mongodbase['about']
 
+    def get_members_coll_info(self):
         print "number of member_pages:", self.member_pages_coll.count()
         print "number of docs with member_IDs:", self.members_coll.find({'member_ID':{"$exists":True}}).count()
         print "number of docs with followers_dict", self.members_coll.find({'followers_dict':{"$exists":True}}).count()
@@ -293,6 +294,17 @@ class Parser(object):
         print "number of docs with favorites_dict", self.members_coll.find({'favorites_dict':{"$exists":True}}).count()
         print "number of docs with madeits_dict", self.members_coll.find({'madeits_dict':{"$exists":True}}).count()
         print "number of docs with aboutme", self.members_coll.find({'aboutme':{"$exists":True}}).count()
+
+    def get_recipes_coll_info(self):
+        print "number of documents:", self.recipes_coll.count()
+        print "number of docs with pages:", self.recipes_coll.find({'page':{"$exists":True,"$not": {"$size": 0}}}).count()
+        print "number of docs with nutrition_info", self.recipes_coll.find({'nutrition_info':{"$exists":True,"$not": {"$size": 0}}}).count()
+        print "number of docs with directions", self.recipes_coll.find({'directions_list':{"$exists":True,"$not": {"$size": 0}}}).count()
+        print "number of docs with rating_list", self.recipes_coll.find({'rating_list':{"$exists":True,"$not": {"$size": 0}}}).count()
+        print "number of docs with nutrition_elements", self.recipes_coll.find({'nutrition_elements':{"$exists":True,"$not": {"$size": 0}}}).count()
+        print "number of docs with itemized nutrition", self.recipes_coll.find({'Cholesterol':{"$exists":True,"$not": {"$size": 0}}}).count()
+        print "number of docs with ingredients_list", self.recipes_coll.find({'ingredients_list':{"$exists":True,"$not": {"$size": 0}}}).count()
+
 
     def check_member_records(self, member_ID):
         """Check for completeness of member_ID's records"""
@@ -788,6 +800,40 @@ class Parser(object):
 #                    print item[0], float(quantity[0]), unit[0]
                     n_list[item[0]]=[float(quantity[0]), unit[0]]
         return n_list
+
+
+    def get_member_nutrition_summary(self, memID):
+        madeits_dict = self.members_coll.find_one({'member_ID':memID})['madeits_dict']
+        return madeits_dict
+
+    def get_member_nutrition_values(memID):
+    mem_doc = members_coll.find_one({"member_ID":memID})
+    mem_madeits = mem_doc['madeits_recipe_id_list']
+    mem_faves = mem_doc['favorites_recipe_id_list']
+    num_madeits = len(mem_madeits)
+    num_favorites = len(mem_faves)
+    print "{} made {} recipes and has {} favorites".format(memID, num_madeits, num_favorites)
+    all_recs = set(mem_faves+mem_madeits)
+    nutes = {}
+    for r in all_recs:
+        doc = recipes_coll.find_one({'recipe_ID': r})
+
+        if not doc or not doc.get('Carbs'):
+            print "{} has no/incomplete document".format(r)
+        else:
+            print doc['name'], doc.get('recipe_ID')
+            nutes[doc['recipe_ID']]= [doc['name'][0],doc['Carbs'][0], doc['Calories'][0], doc['Protein'][0], doc['Fat'][0], doc['Sodium'][0]]
+    npd = pd.DataFrame(index=nutes.keys(), data=nutes.values(), columns =['Name', 'Carbs', 'Calories', 'Protein', 'Fat', 'Sodium'] )
+    npd['fat_per_cals'] = npd['Fat']/npd['Calories']
+    return npd.to_dict()
+
+    def get_all_member_nutrition_values(self):
+        memlist = [a['member_ID'] for a in self.members_coll.find()]
+        for a in memlist:
+            self.members_coll.find_one_and_update({'member_ID':a},
+                                                  {'$set': {"nutrition": self.get_member_nutrition_values(a)}},
+                                                  upsert=True)
+
 
 
 
