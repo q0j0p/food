@@ -9,8 +9,8 @@ There is no shortage of information pertaining to health in our digital age, yet
 
 The USDA and DHHS have conducted surveys on "What We Eat in America (WWEIA surveys) as well as analyses on nutrient compositions of foods consumed.  These bodies of knowledge form the basis for the dietary guidelines set forth every five years ([ref](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/)).  Their current recommendations emphasize principles that guide healhty eating patterns over time ([ref](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#figure-es-1-2015-2020-dietary-guidelines-for-americans-at-a-glan)).  What can be done to empower individuals to adopt healthy eating habits?  
 
-## 
-
+## Using data oriented methods to generate actionable insight  
+<img align="right" src="notes/resources/doing_data_science_fig.png" width="300">Fundamentally, data science is about doing science with data that serves as the basis for delivering value in measurable form.  THe cross industry standard process for data mining ([CRISP-DM](https://en.wikipedia.org/wiki/Cross_Industry_Standard_Process_for_Data_Mining)) is a widely cited guideline for conducting data science.  
 
 ## Documentation
 * [Project proposal](https://docs.google.com/document/d/1fyTX7zHu0Tg92daD9yG4MbEVNJWpAo9V0dDwW1b2xGA/edit?usp=sharing) morphing into project report
