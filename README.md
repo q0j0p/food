@@ -7,7 +7,7 @@ This project is an attempt to pose a pervasive social concern in a data science 
 
 
 <p>
-There is no shortage of information pertaining to health in our digital age, yet it is apparent that the implicit value proposition of our technology-- that it serves to improve life-- is not automatically realized in the information age.  In America, in spite of greater knowledge in improving logevity and quality of life, statistical evidence shows that this is not happening.  Various reasons exist, but to the extent that this is a data science problem, it requires a data science solution.  
+There is no shortage of information pertaining to health in our digital age, yet it is apparent that the implicit value proposition of technology-- that it serves to improve life-- is not fully realized in the information age.  In America, in spite of greater knowledge in improving logevity and quality of life, statistical evidence shows that this is not happening.  Various reasons exist, but to the extent that this is a data science problem, it requires a data science solution.  
 
 
 ## Documentation 
