@@ -7,9 +7,8 @@ This project is an attempt to pose a pervasive social concern in a data science 
 
 
 <p>
-There is no shortage of information pertaining to health in our digital age, yet it is apparent that the implicit value proposition of technology-- that it serves to improve our lives-- is not fully realized in the information age.  In America, in spite of greater knowledge and exorbitant expenditures in healthcare, statistical evidence reveals that the returns are not evident in the general population.  Rather, as a population, we make voluntary choices that make us less healthy.  Numerous reasons exist for this epidemic, but to the extent that this is a data science problem, we must devise more data science tools to address the problem.  
+There is no shortage of information pertaining to health in our digital age, yet it is apparent that the implicit value proposition of technology-- that it serves to improve our lives-- is not fully realized in the information age.  In America, in spite of greater knowledge and exorbitant expenditures in healthcare, statistical evidence reveals that the returns are scarecely evident in the general population.  Rather, as a population, we make voluntary choices that make us less healthy.  Numerous reasons exist for this epidemic, but to the extent that this is a data science problem, more data science tools are necessary to address the problem.  
 
-The
 
 
 ## Documentation
