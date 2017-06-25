@@ -12,6 +12,30 @@ The USDA and DHHS have conducted surveys on "What We Eat in America (WWEIA surve
 ## Using data oriented methods to generate actionable insight  
 <img align="right" src="notes/resources/doing_data_science_fig.png" width="300">Fundamentally, data science is about doing science (statistics) with data that serves as the basis for delivering value in measurable form.  The cross industry standard process for data mining ([CRISP-DM](https://en.wikipedia.org/wiki/Cross_Industry_Standard_Process_for_Data_Mining)) is a widely adopted guideline for conducting data science.  This diagram is a cogent illustration of the process.  
 
+For this project, I wanted to use the data science process make real world observations in dietary behavior and explore ways to empower healthy living.  
+
+
+## Data collection
+
+Tools: python- selenium using Firefox, phantomJS, AWS EC2 instance and S3 storage, MongoDB.  
+
+The main choice for data source was allrecipes.com, a website repository of recipes that is also effectively a social platform for people who cook.  Perhaps more so in the past, it was an unpolished grass-roots site for the everyday cooker ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html))-- it appears to have undergone a major overhaul, replete with commercial advertisements.  
+
+The USDA maintains a database for "standard reference" foods and branded food items sold in the US.  These have nutrition information and the SR list is categorized.  
+
+Allrecipes data was scraped from the website, while the USDA database was accessible by API.  
+
+## Data processing and storage
+Tools: python- beautifulsoup, pandas,
+Scraped pages were parsed and stored as documents in a nosql database.  
+
+## Exploratory data analysis
+
+Tools: python- networkx, gephi
+
+## Modeling
+
+Tools: Latent Dirichlet Allocation, non-negative matrix factorization,
 
 
 ## Documentation
