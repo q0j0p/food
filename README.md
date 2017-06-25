@@ -17,7 +17,7 @@ For this project, I wanted to use the data science process make real world obser
 
 ## Data collection
 
-Tools: python- selenium using Firefox, phantomJS, AWS EC2 instance and S3 storage, MongoDB.  
+Tools: python- selenium using Firefox, phantomJS boto3; AWS EC2 instance and S3 storage, MongoDB.  
 
 The main choice for data source was allrecipes.com, a website repository of recipes that is also effectively a social platform for people who cook.  Perhaps more so in the past, it was an unpolished grass-roots site for the everyday cooker ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html))-- it appears to have undergone a major overhaul, replete with commercial advertisements.  
 
@@ -35,7 +35,7 @@ Tools: python- networkx, gephi
 
 ## Modeling
 
-Tools: Latent Dirichlet Allocation, non-negative matrix factorization,
+Tools: Topic modeling: NLP (Latent Dirichlet Allocation, non-negative matrix factorization) ,
 
 
 ## Documentation
