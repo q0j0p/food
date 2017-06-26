@@ -10,7 +10,7 @@ This project poses a pervasive social concern in a data science framework and pr
 |Data collection| python: selenium (Firefox, phantomJS), boto3. AWS: EC2, S3|
 |Data processing|python: BeautifulSoup, MongoDB|
 |Data analysis|python: pandas, numpy, scikit-learn, nltk, networkx.  Gephi|
-|Modeling | python: scikit-learn|
+|Modeling | python: scikit-learn.  Latent Dirichlet Allocation, Non-negative matrix factorizatoin|
 
 
 
@@ -30,7 +30,6 @@ In this project, I set out to use data science tools to make real world observat
 
 ## Data collection
 
-Tools: python- selenium using Firefox, phantomJS, boto3; AWS EC2 instance and S3 storage, MongoDB.  
 The main choice for data source was allrecipes.com, a website repository of recipes that is also effectively a social platform for people who cook.  It is an unpolished grass-roots website for the everyday cooker ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html))-- or at least it used to be; they have recently undergone a major commercial overhaul.  
 
 The website is a trove of multidimensional data.  In addition to recipe pages that contain user-generated ingredients lists, directions, pictures, metrics (cooking time, servings, nutrition information, etc.), it also contains ratings and reviews linked to members who have made and evaluated the recipe.  Each member has a personal site with sections detailing recipes that they have made or enjoyed.  Also included are list of people that they follow or are followed by.  
@@ -42,44 +41,11 @@ The USDA maintains a database for "standard reference" foods and branded food it
 Allrecipes data was scraped from the website, while the USDA database was accessed via its API.  
 
 ## Data processing and storage
-Tools: python- beautifulsoup, pandas,
 Scraped pages were parsed and stored as documents in a nosql database.  
 
 ## Exploratory data analysis
 ### Graph analysis of a member subset
 <img src="notes/resources/graph1.png" width="650">
 
-Tools: python- networkx, gephi
 
 ## Modeling
-
-Tools: Topic modeling: scikit-learn for NLP (Latent Dirichlet Allocation, non-negative matrix factorization) ,
-
-
-## Documentation
-* [Project proposal](https://docs.google.com/document/d/1fyTX7zHu0Tg92daD9yG4MbEVNJWpAo9V0dDwW1b2xGA/edit?usp=sharing) morphing into project report
-* Capstone [Presentation](https://docs.google.com/presentation/d/1vTqdFdSiJ_m-carGSUVMQn9V2vPaHaKSxM-NFZ9JN2A/edit?usp=sharing)
-* [Notes](https://github.com/q0j0p/food_recommender/blob/master/notes/notes.md) on procedures
-
-## Data
-### Data requirements
-* Nutritional data of food items
-  * Collected from USDA [Food composition database](https://ndb.nal.usda.gov/ndb/search/list) with API
-    * [src/data/ndb_to_mongo.py](src/data/ndb_to_mongo.py)
-* Recipe and user data
-  * Recipes, ratings, member info scraped from [allrecipes.com](https://allrecipes.com) using `selenium`
-    * [src/data/scraper.py](src/data/scraper.py)
-
-### Data management
-* Main storage in `MongoDB` nosql database.  
- * Recipes, member info stored as documents in respective collections
- * Use of AWS/EC2 instances for scalability
-   * [EC2_scraper.py](src/data/EC2_scraper.py)
-   * Scraped data stored in S3 bucket
-
-
-
-## Analysis and modeling
-Code stored in [src/model](src/model/)
-* EDA of USDA standard reference database
-* Topic modeling of USDA branded items database
