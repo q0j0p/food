@@ -367,11 +367,11 @@ class Parser(object):
         if not self.members_coll.find_one({'member_ID':memberID}):
             self.members_coll.insert_one({"member_ID":memberID}, )
         self.check_member_records(memberID)
-        member_doc_keys = ['reviews_dict_list', 'favorites_dict', 'following_recipe_id_list',
-                           'favorites_recipe_id_list', 'madeits_dict',
+        member_doc_keys = ['reviews_recipe_id_list', 'favorites_dict',
+                           'favorites_recipe_id_list',
                            'aboutme', 'madeits_recipe_id_list', 'reviews_recipe_id_list',
-                           'following_dict','followers_dict','link','review_recipe_id_list',
-                           'followers_recipe_id_list', 'reviews_dict', 'member_ID']
+                           'following_id_list','link','review_recipe_id_list',
+                           'followers_id_list', 'followers_dict', 'reviews_dict', 'member_ID', 'madeits_dict']
         thismember_list = list(self.members_coll.find({'member_ID':memberID},member_doc_keys))
         if len(thismember_list) != 1:
             raise Error,  "number of docs for member {} is not one".format(memberID)
@@ -380,32 +380,32 @@ class Parser(object):
         thismember_pages = self.member_pages_coll.find_one({"member_ID":thismember["member_ID"]})
 
         data = {}
-        if not thismember.get('reviews_dict'):
-            data['reviews_data'] = self.get_reviews_data(thismember_pages['reviews_page'])
-        if not thismember.get('favorites_dict'):
-            data['favorites_data'] = self.get_favorites_data(thismember_pages['favorites_page'])
-        if not thismember.get('following_dict'):
-            data['following_data'] = self.get_following_data(thismember_pages['following_page'])
-        if not thismember.get('madeits_dict'):
-            data['madeit_data'] = self.get_madeits_data(thismember_pages['madeit_page'])
+        if not thismember.get('reviews_recipe_id_list'):
+            d = self.get_reviews_data(thismember_pages['reviews_page'])
+            data['reviews_recipe_id_list'] = d[0]
+            data['reviews_dict'] = d[1]
+        if not thismember.get('favorites_recipe_id_list'):
+            d = self.get_favorites_data(thismember_pages['favorites_page'])
+            data['favorites_recipe_id_list'] = d[0]
+            data['favorites_dict'] = d[1]
+        if not thismember.get('following_id_list'):
+            d = self.get_following_data(thismember_pages['following_page'])
+            data['following_id_list'] = d[0]
+            data['following_dict'] = d[1]
+        if not thismember.get('madeits_recipe_id_list'):
+            d = self.get_madeits_data(thismember_pages['madeit_page'])
+            data['madeits_dict'] = d[1]
+            data['madeits_recipe_id_list'] = d[0]
         if not thismember.get('aboutme'):
-            data['aboutme_data'] = self.get_madeits_data(thismember_pages['aboutme_page'])
-        if not thismember.get('followers_dict'):
-            data['followers_data'] = self.get_followers_data(thismember_pages['followers_page'])
+            data['aboutme'] = self.get_madeits_data(thismember_pages['aboutme_page'])[1]
+        if not thismember.get('followers_id_list'):
+            d = self.get_followers_data(thismember_pages['followers_page'])
+            data['followers_id_list'] = d[0]
+            data['followers_dict'] = d[1]
 
-        self.members_coll.find_one_and_update({'member_ID':memberID},
-            {'$set': {"reviews_recipe_id_list": data["reviews_data"][0],
-                      "reviews_dict": data["reviews_data"][1],
-                      "favorites_recipe_id_list": data["favorites_data"][0],
-                      "favorites_dict": data["favorites_data"][1],
-                      "followers_recipe_id_list": data["followers_data"][0],
-                      "followers_dict": data["followers_data"][1],
-                      "following_recipe_id_list": data["following_data"][0],
-                      "following_dict": data["following_data"][1],
-                      "following_recipe_id_list": data["following_data"][0],
-                      "madeits_recipe_id_list": data["madeit_data"][0],
-                      "madeits_dict": data["madeit_data"][1], "
-                      }}, upsert = True)
+        if data:
+            self.members_coll.find_one_and_update({'member_ID':memberID},
+                {'$set': data}, upsert = True)
 
 
     def get_members_reviews(self):

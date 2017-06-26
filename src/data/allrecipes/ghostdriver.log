@@ -1,0 +1,20 @@
+[INFO  - 2017-06-17T19:29:49.785Z] GhostDriver - Main - running on port 49675
+[INFO  - 2017-06-17T19:29:50.518Z] Session [54bdc3f0-5393-11e7-8e42-85f3fe149976] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36/","webSecurityEnabled":true}
+[INFO  - 2017-06-17T19:29:50.518Z] Session [54bdc3f0-5393-11e7-8e42-85f3fe149976] - page.customHeaders:  - {}
+[INFO  - 2017-06-17T19:29:50.518Z] Session [54bdc3f0-5393-11e7-8e42-85f3fe149976] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"mac-unknown-64bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"},"phantomjs.page.settings.userAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chro[INFO  - 2017-06-17T19:34:27.835Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2017-06-17T19:34:27.844Z] SessionManagerReqHand - _cleanupWindowlessSessions - Deleted Session '47a19840-5393-11e7-8cd3-e71442e1a26d', because windowless
+tarting NOW
+[INFO  - 2017-06-17T19:33:11.326Z] SessionManagerReqHand - _cleanupWindowlessSessions - Deleted Session '1a019a20-5393-11e7-a221-b7e965524762', because windowless
+- page.onError - stack:
+  (anonymous function) (http://allrecipes.com/cook/5255353/about-me/:4)
+
+  phantomjs://platform/console++.js:263 in error
+[INFO  - 2017-06-17T19:34:49.802Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2017-06-17T19:39:49.819Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2017-06-17T19:44:49.837Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2017-06-17T19:49:49.193Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2017-06-17T19:54:49.214Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2017-06-17T19:59:49.223Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2017-06-17T20:05:04.512Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2017-06-17T20:10:04.769Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2017-06-17T20:10:04.781Z] SessionManagerReqHand - _cleanupWindowlessSessions - Deleted Session '54bdc3f0-5393-11e7-8e42-85f3fe149976', because windowless
