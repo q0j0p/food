@@ -10,7 +10,7 @@ This project poses a pervasive social concern in a data science framework and pr
 |Data collection| python: selenium (Firefox, phantomJS), boto3. AWS: EC2, S3|
 |Data processing|python: BeautifulSoup, MongoDB|
 |Data analysis|python: pandas, numpy, scikit-learn, nltk, networkx.  Gephi|
-|Modeling | python: scikit-learn.  Latent Dirichlet Allocation, Non-negative matrix factorizatoin|
+|Modeling | python: scikit-learn.  Topic modeling with Latent Dirichlet Allocation, Non-negative matrix factorization. NLP|
 
 
 
@@ -28,7 +28,7 @@ Current data What can be done to empower individuals to adopt healthier eating h
 
 In this project, I set out to use data science tools to make real world observations in dietary behavior and explore ways to empower healthy living.  
 
-## Data collection
+## Data collection, processing, and storage
 
 The main choice for data source was allrecipes.com, a website repository of recipes that is also effectively a social platform for people who cook.  It is an unpolished grass-roots website for the everyday cooker ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html))-- or at least it used to be; they have recently undergone a major commercial overhaul.  
 
@@ -36,12 +36,10 @@ The website is a trove of multidimensional data.  In addition to recipe pages th
 
 - [Scraping the allrecipes.com website](https://github.com/q0j0p/food/wiki/Scraping-the-allrecipes.com-website)
 
-The USDA maintains a database for "standard reference" foods and branded food items sold in the US.  These have nutrition information and the SR list is categorized.  
+The USDA maintains a database for "standard reference" foods (8,789 items) and branded food items (175,206 items) sold in the US.  These have nutrition information and the SR list is categorized.  
 
-Allrecipes data was scraped from the website, while the USDA database was accessed via its API.  
+- [API access to USDA database]
 
-## Data processing and storage
-Scraped pages were parsed and stored as documents in a nosql database.  
 
 ## Exploratory data analysis
 ### Graph analysis of a member subset
