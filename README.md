@@ -7,8 +7,11 @@ This project poses a pervasive social concern in a data science framework and pr
 
 |Stage|Tool|
 |--|:--|
-|Data Collection| phython|
-| test |teset|
+|Data collection| python: selenium (Firefox, phantomJS), boto3. AWS: EC2, S3|
+|Data processing|python: BeautifulSoup, MongoDB|
+|Data analysis|python: pandas, numpy, scikit-learn, nltk, networkx.  Gephi|
+|Modeling | python: scikit-learn|
+
 
 
 ## Problem definition
