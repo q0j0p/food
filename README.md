@@ -30,7 +30,10 @@ In this project, I set out to use data science tools to make real world observat
 Tools: python- selenium using Firefox, phantomJS, boto3; AWS EC2 instance and S3 storage, MongoDB.  
 The main choice for data source was allrecipes.com, a website repository of recipes that is also effectively a social platform for people who cook.  It is an unpolished grass-roots website for the everyday cooker ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html))-- or at least it used to be; they have recently undergone a major commercial overhaul.  
 
-In order to
+The website is a trove of multidimensional data.  In addition to recipe pages that contain user-generated ingredients lists, directions, pictures, metrics (cooking time, servings, nutrition information, etc.), it also contains ratings and reviews linked to members who have made and evaluated the recipe.  Each member has a personal site with sections detailing recipes that they have made or enjoyed.  Also included are list of people that they follow or are followed by.  
+
+- [Scraping the allrecipes.com website](https://github.com/q0j0p/food/wiki/Scraping-the-allrecipes.com-website)
+
 The USDA maintains a database for "standard reference" foods and branded food items sold in the US.  These have nutrition information and the SR list is categorized.  
 
 Allrecipes data was scraped from the website, while the USDA database was accessed via its API.  
