@@ -41,7 +41,7 @@ Scraped pages were parsed and stored as documents in a nosql database.
 
 ## Exploratory data analysis
 ### Graph analysis of a member subset
-<img src="notes/resources/graph1.png" width="600">
+<img align="center" src="notes/resources/graph1.png" width="600">
 
 Tools: python- networkx, gephi
 
