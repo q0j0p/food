@@ -23,12 +23,10 @@ The USDA and DHHS have conducted surveys on "What We Eat in America (WWEIA surve
 
 The goal of the project is to use the variety of tools in data science to make real world observations in dietary behavior and explore ways to empower healthy living.  Specifically, ways to help implement [the five guidelines](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#the-guidelines) and [key recommendations](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#key-recommendations) set forth by ODPHP will be explored.  
 
-### [Business understanding summary](https://github.com/q0j0p/food/wiki/Assessing-the-dietary-guidelines-%5Bbusiness-understanding%5D)*
-
-
-## Using data oriented methods to generate actionable insight  
+### Using data oriented methods to generate actionable insight  
 <img align="right" src="notes/resources/doing_data_science_fig.png" width="300">Fundamentally, data science is about doing science with data (statistics) that serves as the basis for delivering value in measurable form.  The cross industry standard process for data mining ([CRISP-DM](https://en.wikipedia.org/wiki/Cross_Industry_Standard_Process_for_Data_Mining)) is a widely adopted framework.  This diagram is an illustration of the steps involved.  
 
+## [Business understanding summary](https://github.com/q0j0p/food/wiki/Assessing-the-dietary-guidelines-%5Bbusiness-understanding%5D)*
 
 ## Data collection, processing, and storage
 
