@@ -19,14 +19,16 @@ This project poses a pervasive social concern in a data science framework and pr
 <p>
 The digital age proffers all kinds of products built around data, yet it is apparent that the implicit value proposition of technology-- that it serves to improve our lives-- is not fully realized when it comes to issues of health.  As a population, we make voluntary choices that make us less healthy.  Numerous, complex reasons may exist for this epidemic, but to the extent that this is a data science problem, more data science tools are necessary to address the problem.  
 
-The USDA and DHHS have conducted surveys on "What We Eat in America (WWEIA surveys) as well as analyses on nutrient compositions of foods consumed.  These bodies of knowledge form the basis for the dietary guidelines set forth every five years ([ref](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/)).  Their current recommendations are grounded on principles that guide healthy eating patterns over time ([ref](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#figure-es-1-2015-2020-dietary-guidelines-for-americans-at-a-glan)).  
+The USDA and DHHS have conducted surveys on "What We Eat in America (WWEIA surveys) as well as analyses on nutrient compositions of foods consumed.  These bodies of knowledge form the basis for the dietary guidelines set forth every five years ([ref](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/)).  Their current evidence-based recommendations strive to guide changes towards healthy eating patterns over time ([ref](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#figure-es-1-2015-2020-dietary-guidelines-for-americans-at-a-glan)).  
 
-Current data What can be done to empower individuals to adopt healthier eating habits?  
+The goal of the project is to use the variety of tools in data science tools to make real world observations in dietary behavior and explore ways to empower healthy living.  Specifically, ways to help implement [the five guidelines](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#the-guidelines) and [key recommendations](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#key-recommendations) set forth by ODPHP will be explored.  
+
+
+
 
 ## Using data oriented methods to generate actionable insight  
 <img align="right" src="notes/resources/doing_data_science_fig.png" width="300">Fundamentally, data science is about doing science with data (statistics) that serves as the basis for delivering value in measurable form.  The cross industry standard process for data mining ([CRISP-DM](https://en.wikipedia.org/wiki/Cross_Industry_Standard_Process_for_Data_Mining)) is a widely adopted framework.  This diagram is an illustration of the steps involved.  
 
-In this project, I set out to use data science tools to make real world observations in dietary behavior and explore ways to empower healthy living.  
 
 ## Data collection, processing, and storage
 
