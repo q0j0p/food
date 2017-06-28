@@ -23,7 +23,7 @@ The USDA and DHHS have conducted surveys on "What We Eat in America (WWEIA surve
 
 The goal of the project is to use the variety of tools in data science to make real world observations in dietary behavior and explore ways to empower healthy living.  Specifically, ways to help implement [the five guidelines](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#the-guidelines) and [key recommendations](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#key-recommendations) set forth by ODPHP will be explored.  
 
-** [Business understanding summary](https://github.com/q0j0p/food/wiki/Assessing-the-dietary-guidelines-%5Bbusiness-understanding%5D)
+### [Business understanding summary](https://github.com/q0j0p/food/wiki/Assessing-the-dietary-guidelines-%5Bbusiness-understanding%5D)*
 
 
 ## Using data oriented methods to generate actionable insight  
@@ -32,7 +32,7 @@ The goal of the project is to use the variety of tools in data science to make r
 
 ## Data collection, processing, and storage
 
-The main choice for data source was allrecipes.com, a website repository of recipes that is also effectively a social platform for people who cook.  It is an unpolished grass-roots website for the everyday cooker ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html))-- or at least it used to be; they have recently undergone a major commercial overhaul.  
+The main choice for data source was allrecipes.com, a website repository of recipes that is also effectively a social platform for people who cook.  It is an unpolished grass-roots website for the everyday cooker ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html)) [\*they have recently undergone a major commercial overhaul.]  
 
 The website is a trove of multidimensional data.  In addition to recipe pages that contain user-generated ingredients lists, directions, pictures, metrics (cooking time, servings, nutrition information, etc.), it also contains ratings and reviews linked to members who have made and evaluated the recipe.  Each member has a personal site with sections detailing recipes that they have made or enjoyed.  Also included are list of people that they follow or are followed by.  
 
@@ -44,7 +44,14 @@ The USDA maintains a database for "standard reference" foods (8,789 items) and b
 
 
 ## Exploratory data analysis
-### Graph analysis of a member subset
+----
+|Graph analysis of a member subset|  |   |
+|---|---|
+|<img src="notes/resources/graph1.png" width="350">| test|
+|  |  |  
+---
+
+Graph analysis of a member subset
 <img src="notes/resources/graph1.png" width="650">
 
 
