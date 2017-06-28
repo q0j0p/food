@@ -44,9 +44,8 @@ The USDA maintains a database for "standard reference" foods (8,789 items) and b
 
 
 ## Exploratory data analysis
-----
-|Graph analysis of a member subset|  |   
-|---|---|
+
+|Graph analysis of a member subset| x |   
 |---|---|
 |<img src="notes/resources/graph1.png" width="350">| test|
 |  |  |  
