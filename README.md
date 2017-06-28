@@ -2,15 +2,8 @@
 ## Motivation
 This project poses a pervasive social concern in a data science framework and provide insight using data science.  
 
-## Tools used
+## [Tools used](https://github.com/q0j0p/food/wiki/Tools-used)
 
-
-|Stage|Tool|
-|--|:--|
-|Data collection| python: selenium (Firefox, phantomJS), boto3. AWS: EC2, S3|
-|Data processing|python: BeautifulSoup, MongoDB|
-|Data analysis|python: pandas, numpy, scikit-learn, nltk, networkx.  Gephi|
-|Modeling | python: scikit-learn.  Topic modeling with Latent Dirichlet Allocation, Non-negative matrix factorization. NLP|
 
 
 
