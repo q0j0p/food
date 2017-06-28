@@ -21,9 +21,9 @@ The digital age proffers all kinds of products built around data, yet it is appa
 
 The USDA and DHHS have conducted surveys on "What We Eat in America (WWEIA surveys) as well as analyses on nutrient compositions of foods consumed.  These bodies of knowledge form the basis for the dietary guidelines set forth every five years ([ref](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/)).  Their current evidence-based recommendations strive to guide changes towards healthy eating patterns over time ([ref](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#figure-es-1-2015-2020-dietary-guidelines-for-americans-at-a-glan)).  
 
-The goal of the project is to use the variety of tools in data science tools to make real world observations in dietary behavior and explore ways to empower healthy living.  Specifically, ways to help implement [the five guidelines](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#the-guidelines) and [key recommendations](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#key-recommendations) set forth by ODPHP will be explored.  
+The goal of the project is to use the variety of tools in data science to make real world observations in dietary behavior and explore ways to empower healthy living.  Specifically, ways to help implement [the five guidelines](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#the-guidelines) and [key recommendations](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#key-recommendations) set forth by ODPHP will be explored.  
 
-
+** [Business understanding summary](https://github.com/q0j0p/food/wiki/Assessing-the-dietary-guidelines-%5Bbusiness-understanding%5D)
 
 
 ## Using data oriented methods to generate actionable insight  
