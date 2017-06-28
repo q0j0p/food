@@ -38,7 +38,7 @@ The website is a trove of multidimensional data.  In addition to recipe pages th
 
 The USDA maintains a database for "standard reference" foods (8,789 items) and branded food items (175,206 items) sold in the US.  These have nutrition information and the SR list is categorized.  
 
-- [API access to USDA database]
+- [API access to USDA database](https://github.com/q0j0p/food/wiki/The-USDA-food-items-database)
 
 
 ## Exploratory data analysis
