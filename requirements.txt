@@ -1,1 +1,9 @@
 pymongo 
+requests 
+selenium
+bs4 
+collections 
+pickle 
+json 
+re 
+pandas 
