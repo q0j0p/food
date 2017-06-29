@@ -24,7 +24,8 @@ The goal of the project is to use the variety of tools available in data science
 
 ### [Business understanding summary](https://github.com/q0j0p/food/wiki/Assessing-the-dietary-guidelines-%5Bbusiness-understanding%5D)
 
-
+<p>
+<p>
 
 
 ## Data collection, processing, and storage
