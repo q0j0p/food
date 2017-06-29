@@ -24,7 +24,7 @@ The goal of the project is to use the variety of tools available in data science
 
 ### [Business understanding summary](https://github.com/q0j0p/food/wiki/Assessing-the-dietary-guidelines-%5Bbusiness-understanding%5D)
 
-<br>
+
 ## Data collection, processing, and storage
 
 The main choice for data source was allrecipes.com, a website repository of recipes that is also effectively a social platform for people who cook.  It is an unpolished grass-roots website for the everyday cooker ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html)) [\*they have recently undergone a major commercial overhaul.]  
