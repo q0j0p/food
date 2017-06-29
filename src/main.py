@@ -18,6 +18,7 @@ import boto3
 import pickle
 import json
 import re
+import pandas as pd
 
 AWS_KEY = os.environ['AWS_ACCESS_KEY']
 AWS_SECRET = os.environ['AWS_SECRET_ACCESS_KEY']
@@ -283,6 +284,7 @@ class Parser(object):
         self.member_pages_coll = self.mongodbase['member_pages']
         self.members_coll = self.mongodbase['members']
         self.recipes_coll = self.mongodbase['recipes']
+        self.recipe_pages_coll = self.mongodbase['recipe_pages']
         self.about_coll = self.mongodbase['about']
 
     def get_members_coll_info(self):
@@ -294,6 +296,7 @@ class Parser(object):
         print "number of docs with favorites_dict", self.members_coll.find({'favorites_dict':{"$exists":True}}).count()
         print "number of docs with madeits_dict", self.members_coll.find({'madeits_dict':{"$exists":True}}).count()
         print "number of docs with aboutme", self.members_coll.find({'aboutme':{"$exists":True}}).count()
+        print "number of docs with nutrition values", self.members_coll.find({'nutrition':{"$exists":True}}).count()
 
     def get_recipes_coll_info(self):
         print "number of documents:", self.recipes_coll.count()
@@ -678,6 +681,34 @@ class Parser(object):
         print "recipes without page:",self.recipes_coll.find({"page": {"$exists": False}}).count()
 
 
+    def get_recipe_data_from_recipe_pages_coll(self):
+
+
+        recs_in_recipe_pages_coll = {a['recipe_ID'] for a in self.recipe_pages_coll.find()}
+        recs_in_recipes_coll = {a['recipe_ID'] for a in self.recipes_coll.find({'ingredients_list':{"$exists":True,"$not": {"$size": 0}}})}
+        recs_to_get =  recs_in_recipe_pages_coll - recs_in_recipes_coll
+        print "Number of docs in recipe_pages_coll", len(recs_in_recipe_pages_coll)
+        print "Number of docs in recipe_pages with ingredients info:", len(recs_in_recipes_coll)
+        print "Number of documents to populate:", len(recs_to_get)
+        for a in recs_to_get:
+            page_doc = self.recipe_pages_coll.find_one({'recipe_ID':a})['page']
+            doc_recipe_data = self.parse_recipe_data(page_doc)
+            print "upserting: ", a
+            self.recipes_coll.find_one_and_update({'recipe_ID':a},
+                {"$set":  {"name": doc_recipe_data[0],
+                          "description": doc_recipe_data[1],
+                          "ingredients_list": doc_recipe_data[2],
+                          "recipe_times": doc_recipe_data[3],
+                          "directions_list": doc_recipe_data[4],
+                          "servings": doc_recipe_data[5],
+                          "rating_list": doc_recipe_data[6],
+                          "servings_config": doc_recipe_data[7],
+                          "nutrition_serving_info": doc_recipe_data[8],
+                          "nutrition_info": doc_recipe_data[9],
+                          "nutrition_elements": doc_recipe_data[10]}},
+                          upsert = True)
+
+
     def get_recipe_data(self):
         """Populate recipes documents in recipes_coll with data using respective pages"""
 
@@ -772,7 +803,7 @@ class Parser(object):
             if ninfo:
                 self.recipes_coll.find_one_and_update({'recipe_ID':doc['recipe_ID']},
                                                   {'$set': ninfo},
-                                                  return_document=pymongo.ReturnDocument.AFTER)
+                                                  return_document=pymongo.ReturnDocument.AFTER, upsert=True)
         print "{} out of {} recipe documents have itemized nutrition info".format(self.recipes_coll.find({'Cholesterol':{'$exists':True}}).count(),
                                                                                   self.recipes_coll.count())
 
@@ -791,14 +822,13 @@ class Parser(object):
         strlist = self.recipes_coll.find_one({'recipe_ID':recID})['nutrition_info']
 
         n_list = {}
-        for a in strlist:
-            for b in a:
-                quantity = q.findall(b)
-                unit = u.findall(b)
-                item = i.findall(b)
-                if quantity and unit and item:
+        for b in strlist:
+            quantity = q.findall(b)
+            unit = u.findall(b)
+            item = i.findall(b)
+            if quantity and unit and item:
 #                    print item[0], float(quantity[0]), unit[0]
-                    n_list[item[0]]=[float(quantity[0]), unit[0]]
+                n_list[item[0]]=[float(quantity[0]), unit[0]]
         return n_list
 
 
@@ -806,26 +836,27 @@ class Parser(object):
         madeits_dict = self.members_coll.find_one({'member_ID':memID})['madeits_dict']
         return madeits_dict
 
-    def get_member_nutrition_values(memID):
-    mem_doc = members_coll.find_one({"member_ID":memID})
-    mem_madeits = mem_doc['madeits_recipe_id_list']
-    mem_faves = mem_doc['favorites_recipe_id_list']
-    num_madeits = len(mem_madeits)
-    num_favorites = len(mem_faves)
-    print "{} made {} recipes and has {} favorites".format(memID, num_madeits, num_favorites)
-    all_recs = set(mem_faves+mem_madeits)
-    nutes = {}
-    for r in all_recs:
-        doc = recipes_coll.find_one({'recipe_ID': r})
+    def get_member_nutrition_values(self,memID):
+        mem_doc = self.members_coll.find_one({"member_ID":memID})
+        mem_madeits = mem_doc['madeits_recipe_id_list']
+        mem_faves = mem_doc['favorites_recipe_id_list']
+        num_madeits = len(mem_madeits)
+        num_favorites = len(mem_faves)
+        print "{} made {} recipes and has {} favorites".format(memID, num_madeits, num_favorites)
+        all_recs = set(mem_faves+mem_madeits)
+        nutes = {}
+        for r in all_recs:
+            doc = self.recipes_coll.find_one({'recipe_ID': r})
 
-        if not doc or not doc.get('Carbs'):
-            print "{} has no/incomplete document".format(r)
-        else:
-            print doc['name'], doc.get('recipe_ID')
-            nutes[doc['recipe_ID']]= [doc['name'][0],doc['Carbs'][0], doc['Calories'][0], doc['Protein'][0], doc['Fat'][0], doc['Sodium'][0]]
-    npd = pd.DataFrame(index=nutes.keys(), data=nutes.values(), columns =['Name', 'Carbs', 'Calories', 'Protein', 'Fat', 'Sodium'] )
-    npd['fat_per_cals'] = npd['Fat']/npd['Calories']
-    return npd.to_dict()
+            if not doc or not doc.get('Carbs'):
+                print "{} has no/incomplete document".format(r)
+            else:
+#                print doc['name'], doc.get('recipe_ID')
+                nutes[doc['recipe_ID']]= [doc['name'][0],doc['Carbs'][0], doc['Calories'][0], doc['Protein'][0], doc['Fat'][0], doc['Sodium'][0]]
+        npd = pd.DataFrame(index=nutes.keys(), data=nutes.values(), columns =['Name', 'Carbs', 'Calories', 'Protein', 'Fat', 'Sodium'] )
+        npd['fat_per_cals'] = npd['Fat']/npd['Calories']
+        npd_desc = npd.describe()
+        return npd_desc.to_dict()
 
     def get_all_member_nutrition_values(self):
         memlist = [a['member_ID'] for a in self.members_coll.find()]
