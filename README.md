@@ -19,8 +19,6 @@ The goal of the project is to use the variety of tools available in data science
 ### Using data oriented methods to generate actionable insight  
 <img align="right" src="notes/resources/doing_data_science_fig.png" width="300">Fundamentally, data science is about doing science with data (statistics) that serves as the basis for delivering value in measurable form.  The cross industry standard process for data mining ([CRISP-DM](https://en.wikipedia.org/wiki/Cross_Industry_Standard_Process_for_Data_Mining)) is a widely adopted framework.  This diagram is an illustration of the steps involved.  
 
-<br>
-<br>
 
 ### [Summary of aims](https://github.com/q0j0p/food/wiki/Assessing-the-dietary-guidelines-%5Bbusiness-understanding%5D)
 
