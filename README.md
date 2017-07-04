@@ -34,7 +34,9 @@ The website is a trove of multidimensional data.  In addition to recipe pages th
 
 - [Scraping the allrecipes.com website](https://github.com/q0j0p/food/wiki/Scraping-the-allrecipes.com-website)
 
-- [Parsing the recipes data]()
+- [Parsing the recipes data](https://github.com/q0j0p/food/wiki/Parsing-recipe-ingredients)
+
+
 The USDA maintains a database for "standard reference" foods (8,789 items) and branded food items (175,206 items) sold in the US.  These have nutrition information and the SR list is categorized.  
 
 - [API access to USDA database](https://github.com/q0j0p/food/wiki/The-USDA-food-items-database)
