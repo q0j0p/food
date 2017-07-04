@@ -1,6 +1,6 @@
 
 ## Motivation
-This project poses a pervasive social concern in a data science framework and provide insight using data science.  
+This project poses a pervasive social concern in a data science framework and provides insights using tools available in data science.  
 
 ## [Tools used](https://github.com/q0j0p/food/wiki/Tools-used)
 
@@ -17,7 +17,7 @@ The USDA and DHHS have conducted surveys on "What We Eat in America (WWEIA surve
 The goal of the project is to use the variety of tools available in data science to make real world observations in dietary behavior and explore ways to empower healthy living.  Specifically, ways to help implement [the five guidelines](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#the-guidelines) and [key recommendations](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary/#key-recommendations) set forth by ODPHP will be explored.  
 
 ### Using data oriented methods to generate actionable insight  
-<img align="right" src="notes/resources/doing_data_science_fig.png" width="300">Fundamentally, data science is about doing science with data (statistics) that serves as the basis for delivering value.  The cross industry standard process for data mining ([CRISP-DM](https://en.wikipedia.org/wiki/Cross_Industry_Standard_Process_for_Data_Mining)) is a widely adopted framework.  This diagram is an illustration of the steps involved.  
+<img align="right" src="notes/resources/doing_data_science_fig.png" width="300">Fundamentally, data science is about conducting scientific experimentation with data (statistics) that serves as the basis for delivering value.  The cross industry standard process for data mining ([CRISP-DM](https://en.wikipedia.org/wiki/Cross_Industry_Standard_Process_for_Data_Mining)) is a widely adopted framework.  This diagram is an illustration of the steps involved.  
 
 
 ### [Summary of aims](https://github.com/q0j0p/food/wiki/Assessing-the-dietary-guidelines-%5Bbusiness-understanding%5D)
@@ -28,12 +28,13 @@ The goal of the project is to use the variety of tools available in data science
 
 ## Data collection, processing, and storage
 
-The data source of choice was allrecipes.com, an extensive website repository of recipes that is also effectively a social platform for people who cook.  It is an unpolished grass-roots website for the everyday cook ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html)) [\*they have recently undergone a major commercial overhaul.]  
+The data source of choice was allrecipes.com, an extensive website repository of recipes that is also effectively a social platform for people who cook.  It is an unpolished grass-roots website for the everyday cook ([ref](http://www.slate.com/articles/life/food/2016/05/allrecipes_reveals_the_enormous_gap_between_foodie_culture_and_what_americans.html), [ref](http://press.allrecipes.com)) [\*they have recently undergone a major commercial overhaul.]  
 
 The website is a trove of multidimensional data.  In addition to recipe pages that contain user-generated ingredients lists, directions, pictures, metrics (cooking time, servings, nutrition information, etc.), it also contains ratings and reviews linked to members who have made and evaluated the recipe.  Each member has a personal site with sections detailing recipes that they have made or enjoyed.  Also included are list of people that they follow or are followed by.  
 
 - [Scraping the allrecipes.com website](https://github.com/q0j0p/food/wiki/Scraping-the-allrecipes.com-website)
 
+- [Parsing the recipes data]()
 The USDA maintains a database for "standard reference" foods (8,789 items) and branded food items (175,206 items) sold in the US.  These have nutrition information and the SR list is categorized.  
 
 - [API access to USDA database](https://github.com/q0j0p/food/wiki/The-USDA-food-items-database)
