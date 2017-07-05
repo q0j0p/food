@@ -32,14 +32,14 @@ The data source of choice was allrecipes.com, an extensive website repository of
 
 The website is a trove of multidimensional data.  In addition to recipe pages that contain user-generated ingredients lists, directions, pictures, metrics (cooking time, servings, nutrition information, etc.), it also contains ratings and reviews linked to members who have made and evaluated the recipe.  Each member has a personal site with sections detailing recipes that they have made or enjoyed.  Also included are list of people that they follow or are followed by.  
 
-- [Scraping the allrecipes.com website](https://github.com/q0j0p/food/wiki/Scraping-the-allrecipes.com-website)
+### [Scraping the allrecipes.com website](https://github.com/q0j0p/food/wiki/Scraping-the-allrecipes.com-website)
 
-- [Parsing the recipes data](https://github.com/q0j0p/food/wiki/Parsing-recipe-ingredients)
+### [Parsing the recipes data](https://github.com/q0j0p/food/wiki/Parsing-recipe-ingredients)
 
 
 The USDA maintains a database for "standard reference" foods (8,789 items) and branded food items (175,206 items) sold in the US.  These have nutrition information and the SR list is categorized.  
 
-- [API access to USDA database](https://github.com/q0j0p/food/wiki/The-USDA-food-items-database)
+### [API access to USDA database](https://github.com/q0j0p/food/wiki/The-USDA-food-items-database)
 
 
 ## Exploratory data analysis
