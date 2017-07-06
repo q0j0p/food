@@ -16,6 +16,7 @@ import os
 import boto3
 import pickle
 import json
+import re
 
 AWS_KEY = os.environ['AWS_ACCESS_KEY']
 AWS_SECRET = os.environ['AWS_SECRET_ACCESS_KEY']
@@ -291,7 +292,6 @@ class Parser(object):
         print "number of docs with favorites_dict", self.members_coll.find({'favorites_dict':{"$exists":True}}).count()
         print "number of docs with madeits_dict", self.members_coll.find({'madeits_dict':{"$exists":True}}).count()
         print "number of docs with aboutme", self.members_coll.find({'aboutme':{"$exists":True}}).count()
-
 
     def check_member_records(self, member_ID):
         """Check for completeness of member_ID's records"""
@@ -666,6 +666,8 @@ class Parser(object):
 
 
     def get_recipe_data(self):
+        """Populate recipes documents in recipes_coll with data using respective pages"""
+
         no_recipedata_docs_cursor = self.recipes_coll.find({"recipe_ID": {"$exists":True},
                                                     "name": {"$exists": False}},
                                                     ["recipe_ID", "page"],
@@ -679,7 +681,7 @@ class Parser(object):
         print "Count of recipe documents with no recipe data:", has_recipedata_docs_cursor.count()
 
         for doc in no_recipedata_docs_cursor:
-            doc_recipe_data = self.get_recipe_data(doc['page'])
+            doc_recipe_data = self.parse_recipe_data(doc['page'])
             self.recipes_coll.find_one_and_update({"recipe_ID": doc['recipe_ID']},
                 {"$set": {"name": doc_recipe_data[0],
                           "description": doc_recipe_data[1],
@@ -699,13 +701,13 @@ class Parser(object):
         print "Count of member documents with no recipe name field:", no_recipedata_docs_cursor.count()
 
 
-    def get_recipe_data(self, page):
+    def parse_recipe_data(self, page):
         """Given html document of a recipe, parse and output relevant fields.
 
         Parameters
         ----------
         page : obj
-            html document of recipe
+            scraped html document of recipe
 
         Returns
         -------
@@ -749,12 +751,40 @@ class Parser(object):
                 servings_config, nutrition_servings_info, nutrition_info, nutrition_elements)
 
 
+    def insert_all_nutrition_info(self):
+        """Populate documents in recipes collection with nutrition info"""
+        for doc in self.recipes_coll.find({"$and":{'nutrition_info':{"$exists":True},
+                                                   'Cholesterol':{"$exists":False}}):
+            self.recipes_coll.find_one_and_update({'recipe_ID':doc['recipe_ID']},
+                                                  {'$set': self.get_recipe_nutrition(doc['recipe_ID'])},
+                                                  return_document=ReturnDocument.AFTER)
 
 
-    def get_html(self, browser="firefox"):
+    def get_recipe_nutrition(self, recID):
+        """Get nutrition info give recipe_ID
+
+        Returns
+        -------
+        Dict of
+
         """
-        """
-        pass
+        q = re.compile('(?<=[\s:<])\d*\.?\,?\d+')
+        u = re.compile('[A-z]+$')
+        i = re.compile('\w+(?=[:])')
+        strlist = [a['nutrition_info'] for a in recipes_coll.find({'recipe_ID':rec})]
+        if not strlist:
+            raise Exception "No nutrition info for this recipe"
+
+        n_list = {}
+        for a in strlist:
+            for b in a:
+                quantity = q.findall(b)
+                unit = u.findall(b)
+                item = i.findall(b)
+                if quantity and unit and item:
+#                    print item[0], float(quantity[0]), unit[0]
+                    n_list[item[0]]=[float(quantity[0]), unit[0]]
+
 
 
 
