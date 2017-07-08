@@ -1,6 +1,6 @@
 
 ## Motivation
-This project poses a pervasive social concern in a data science framework and provide insight using data science.  *
+This project poses a pervasive social concern in a data science framework and provide insight using data science. 
 
 ## [Tools used](https://github.com/q0j0p/food/wiki/Tools-used)
 
@@ -45,8 +45,6 @@ The USDA maintains a database for "standard reference" foods (8,789 items) and b
 |---|---|
 |<img src="https://github.com/q0j0p/food/blob/master/notes/resources/graph1.png" width="350">| <img src = "https://github.com/q0j0p/food/blob/master/notes/resources/food_items1.png" width ="300">|
 |  |  |  
----
-
 
 ## Modeling
 
