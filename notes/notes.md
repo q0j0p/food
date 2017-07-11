@@ -237,5 +237,8 @@ Construct tf-idf vectors
 
 * Recipe datasets have ingredients lists that are typically composed of "quantity-unit-item" phrases.  
 
+## attaching and mounting ebs volumes 
+http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
+
 
 
