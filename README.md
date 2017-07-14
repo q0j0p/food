@@ -54,6 +54,6 @@ The USDA maintains a database for "standard reference" foods (8,789 items) and b
 ## Modeling
 
 | [Topic modeling with Latent Dirichlet Allocation](https://github.com/q0j0p/food/wiki/Topic-modeling-with-LDA) | [Recommendation system for recipes](https://github.com/q0j0p/food/wiki/Recommenders) |   
-|---|---|
+|Topic modeling recipe ingredients using NMF|---|
 || |
 |  |  |  
