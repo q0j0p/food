@@ -221,13 +221,6 @@ Construct tf-idf vectors
 |USDA|   |   |
 
 
----
-## User onboarding 
-### Questionnaire 
-  * prompt user to list 1 week history of meals.  
-    * user rates each meal
-
-
 ## Parsing ingredients list 
 
 [This article](https://open.blogs.nytimes.com/2015/04/09/extracting-structured-data-from-recipes-using-conditional-random-fields/?_r=0) is insightful for parsing ingredients. 
@@ -240,5 +233,8 @@ Construct tf-idf vectors
 ## attaching and mounting ebs volumes 
 http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-using-volumes.html
 
+## User preferences
+Users would naturally try recipes that they are interested in.  Ratings would be skewed towards being favorable-- unless the user had an inordinately bad experience.  
 
-
+## Topic modeling using NMF 
+- categorize recipes into topics
