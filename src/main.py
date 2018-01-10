@@ -10,7 +10,6 @@ from bs4 import BeautifulSoup as BS
 import random
 import requests
 import pymongo
-
 import matplotlib.pyplot as plt
 import collections
 import os
@@ -27,13 +26,17 @@ BASE_URL = 'http://allrecipes.com'
 MONGODB_NAME = "allrecipes"
 MONGODB_URI = 'mongodb://localhost:27017/'
 
+
 class Scraper(object):
     """
     Simple scraper for the allrecipes.com website.
 
 
     """
-    def __init__(self, base_url=BASE_URL, dbname = MONGODB_NAME, browser= "Firefox"):
+    def __init__(self,
+                 base_url=BASE_URL,
+                 dbname=MONGODB_NAME,
+                 browser="Firefox"):
 
         self.base_url = base_url
         try:
@@ -50,28 +53,25 @@ class Scraper(object):
         elif self.browser == "Phantom":
             self.use_phantom()
 
-
     def use_firefox(self):
         self.driver = webdriver.Firefox(firefox_binary=FirefoxBinary(
-        firefox_path='/Applications/FirefoxESR.app/Contents/MacOS/firefox'))
-
+            firefox_path='/Applications/FirefoxESR.app/Contents/MacOS/firefox'))
 
     def use_phantom(self):
         dcap = dict(DesiredCapabilities.PHANTOMJS)
-        #settings to emulate my machine, which works
+        # settings to emulate my machine, which works
         dcap["phantomjs.page.settings.userAgent"] = (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML,\
             like Gecko) Chrome/56.0.2924.76 Safari/537.36/")
 #        self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
         self.driver = webdriver.PhantomJS(desired_capabilities=dcap)
         self.driver.implicity_wait(10)
-        self.driver.set_window_size(839,937)
-
+        self.driver.set_window_size(839, 937)
 
     def get_community_page_scrolled(self,
-            num_pages=None,
-            browser = "Firefox",
-            url_path = "/recipes/84/healthy-recipes/"):
+                                    num_pages=None,
+                                    browser="Firefox",
+                                    url_path="/recipes/84/healthy-recipes/"):
         """Access community page using selenium and scrape, scroll down and click.
         Store entire page in database.
 
@@ -111,14 +111,14 @@ class Scraper(object):
                     self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                     print "scroll {} times \n".format(i)
                     time.sleep(5 + random.random() * 4)
-                #update page
+                # update page
                 self.community_page = self.driver.page_source
 #            self.mongodbase['community_page']
         return self.driver.page_source
 
     def get_community_members(self, num_pages=None,
-      browser = "Firefox",
-      url_path = "/ask-the-community"):
+                              browser="Firefox",
+                              url_path="/ask-the-community"):
         """
         Access community page using selenium and scrape, scroll down and click.
         Store entire page in database, but also return page as text.
@@ -144,7 +144,7 @@ class Scraper(object):
         # In allrecipes, I need to scroll down 3 times, then click on "more" button.
         if num_pages:
             for i in range(4):
-                time.sleep(9+random.random() * 2) # randomized pause times
+                time.sleep(9+random.random() * 2)  # randomized pause times
                 self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight/1.2);")
                 print "scroll {} times \n".format(i)
             for i in range(num_pages):
@@ -220,6 +220,8 @@ class Scraper(object):
         print "accessing {} \n".format(url)
         self.driver.get(url)
         recipes_page = self.driver.page_source
+
+        print "access complete"
 
         client = pymongo.MongoClient(MONGODB_URI)
         member_pages_coll = client.allrecipes.member_pages
@@ -865,19 +867,108 @@ class Parser(object):
                                                   {'$set': {"nutrition": self.get_member_nutrition_values(a)}},
                                                   upsert=True)
 
+###############################################################################
+# Code for Models
+###############################################################################
+
+
+class Recommender(object):
+    """Class for models using allrecipes and usda data"""
+
+    def __init__(self, dbname=MONGODB_NAME):
+        try:
+            self.mongoclient = pymongo.MongoClient(MONGODB_URI)
+            self.mongodbase = self.mongoclient[dbname]
+            print "Connected to {}".format(self.mongodbase)
+        except pymongo.errors.ConnectionFailure as e:
+            print "Could not connect to MongoDB: %s".format(e)
+        self.member_pages_coll = self.mongodbase['member_pages']
+        self.members_coll = self.mongodbase['members']
+        self.recipes_coll = self.mongodbase['recipes']
+        self.recipe_pages_coll = self.mongodbase['recipe_pages']
+        self.about_coll = self.mongodbase['about']
+        self.neighborhood_size = neighborhood_size
+
+    def fit(self, ratings_mat):
+        """Fit the model to the data specified as an argument.
+        Store objects for describing model fit as class attributes.
+        """
+        self.ratings_mat = ratings_mat
+        self.n_users = ratings_mat.shape[0]
+        self.n_items = ratings_mat.shape[1]
+        self.items_cos_sim = cosine_similarity(ratings_mat.T)
+        least_to_most_sim_indexes = np.argsort(self.items_cos_sim, 1)
+        self._set_neighborhoods(least_to_most_sim_indexes)
+
+
+    def _set_neighborhoods(self, mat):
+        """Get the items most similar to each other item.
+
+        Should set a class attribute with a matrix with number of rows
+        equal to number of items, and number of columns equal to
+        neighborhood size. Entries in this matrix will be indices of other
+        items.
+
+        You will call this in your fit method.
+        """
+        self.neighborhood = mat[:,-self.neighborhood_size:]
+
+    def pred_one_user(self, uid, timer=False):
+        """Accept user id as arg. Return the predictions for a single user.
+
+        Optional argument to specify whether or not timing should be
+        provided on this operation.
+        """
+        t_start = time()
+        if timer:
+            pass
+        n_items = self.ratings_mat.shape[1]
+        items_rated = self.ratings_mat[uid].nonzero()[1]
+        output = np.zeros(n_items)
+        for item_to_rate in range(n_items):
+            relevant_items = np.intersect1d(self.neighborhood[item_to_rate],
+                                            items_rated,
+                                            assume_unique=True)
+            output[item_to_rate] = self.ratings_mat[uid, relevant_items] *\
+                        self.items_cos_sim[item_to_rate, relevant_items]/\
+                        self.items_cos_sim[item_to_rate, relevant_items].sum()
+        if timer:
+            print("Execution time: %f seconds" % (time()-t_start))
+        return np.nan_to_num(output)
+
+
+    def pred_all_users(self, timer=False):
+        """Return a matrix of predictions for all users.
+
+        Repeated calls of pred_one_user, are combined into a single matrix.
+        Return value is matrix of users (rows) items (columns) and
+        predicted ratings (values).
+
+        Optional argument to specify whether or not timing should be
+        provided on this operation.
+        """
+        t_start = time()
+        all_ratings = [
+            self.pred_one_user(uid) for uid in range(self.n_users)]
+        if timer:
+            print "Execution time: %f seconds"  % (time()-t_start)
+
+    def top_n_recs(self,uid, num):
+        """Take user_id argument and number argument.
+
+        Return that number of items with the highest predicted ratings,
+        after removing items that user has already rated.
+        """
+        pred_ratings = self.pred_one_user(uid)
+        pass
 
 
 
 
 
-def get_recipe_ids(self):
-    """Get recipe ids from recipe links in page.
 
-    Parameters
-    ----------
 
-    """
-    pass
+
 
 '''
 db = client.allrecipes
