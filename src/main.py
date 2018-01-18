@@ -237,10 +237,27 @@ class Scraper(object):
                  "madeit_page": madeit_page,
                  "recipes_page": recipes_page,
                  "link": base_url
-                }},
+            }},
              upsert = True)
 
         return member_pages_coll
+
+    def get_more_pages(self):
+        """Click on `more` button, if it exists,
+        """
+
+    def get_recipe_page(self, recipe_ID):
+        """Given a recipe ID, add page to recipes database.
+        """
+        url = self.base_url + "/recipe/" + recipe_ID
+        self.driver.get(url)
+        page = self.driver.page_source
+        self.recipes_coll.update_one(
+        {"recipe_ID" : recipe_ID},
+        {"$set" :
+            {"page" : page}},
+        upsert = True)
+
 
 
     def get_page_from_list(self, urllist, collname, offset=0):
