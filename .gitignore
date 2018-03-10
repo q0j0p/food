@@ -3,4 +3,4 @@ src/data/*.pkl
 src/*.pyc 
 src/data/*.pyc
 src/data/allrecipes/.py
-src/data/*.pklc
+src/data/*.pkl
