@@ -1,0 +1,8 @@
+Task trail 
+unpack snap data
+install snap.py for python
+use `python2` virtual environment  
+parse text dat into sql 
+  use psycopg2
+  create `food` database  
+

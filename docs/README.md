@@ -1,7 +1,6 @@
----
----
+
 ## Motivation
-This project poses a pervasive social concern in a data science framework and provide insight using data science. 
+This project poses a pervasive social concern in a data science framework and provide insight using data science.
 
 ## [Tools used](https://github.com/q0j0p/food/wiki/Tools-used)
 
