@@ -37,7 +37,7 @@ The USDA maintains a database for "standard reference" foods (8,789 items) and b
 
 | [Allrecipes member network](https://github.com/q0j0p/food/wiki/Graph-analysis-of-allrecipes.com-member-subset) | [ USDA food items](https://github.com/q0j0p/food/wiki/EDA-of-USDA-food-items-database) |   
 |---|---|
-|[snapshot](./resources/graph1.png =250x)| [](./resources/food_items1.png =250x)|
+|![snapshot](./resources/graph1.png =250x)| ![snapshot](./resources/food_items1.png =250x)|
 |  |  |  
 
 ## Modeling
