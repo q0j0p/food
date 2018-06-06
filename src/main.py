@@ -54,6 +54,12 @@ class Scraper(object):
             self.use_phantom()
 
     def use_firefox(self):
+
+        profile = webdriver.FirefoxProfile()
+        # profile.set_preference('browser.download.folderList', 2) # custom location
+        # profile.set_preference('browser.download.manager.showWhenStarting', False)
+        # profile.set_preference('browser.download.dir', '/tmp')
+        # profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'text/csv')
         self.driver = webdriver.Firefox(firefox_binary=FirefoxBinary(
             firefox_path='/Applications/FirefoxESR.app/Contents/MacOS/firefox'))
 
