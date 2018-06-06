@@ -3,7 +3,7 @@
 
 ## Getting started
 
-[`requirements.yml` to be created]
+[.yml to be createe]
 
 ## Setup, install, usage
 
