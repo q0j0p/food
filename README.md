@@ -3,8 +3,8 @@
 
 ## Getting started
 
-[.yml to be createe]
-
+[.yml to be created]
+[Update and refactoring in progress]
 ## Setup, install, usage
 
 [More to follow once app is created]
