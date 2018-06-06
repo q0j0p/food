@@ -1,0 +1,7 @@
+data/sources/*
+src/data/*.pkl
+src/*.pyc 
+src/data/*.pyc
+src/data/allrecipes/.py
+src/data/*.pkl
+src/data/*

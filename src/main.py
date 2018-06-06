@@ -54,6 +54,12 @@ class Scraper(object):
             self.use_phantom()
 
     def use_firefox(self):
+
+        profile = webdriver.FirefoxProfile()
+        # profile.set_preference('browser.download.folderList', 2) # custom location
+        # profile.set_preference('browser.download.manager.showWhenStarting', False)
+        # profile.set_preference('browser.download.dir', '/tmp')
+        # profile.set_preference('browser.helperApps.neverAsk.saveToDisk', 'text/csv')
         self.driver = webdriver.Firefox(firefox_binary=FirefoxBinary(
             firefox_path='/Applications/FirefoxESR.app/Contents/MacOS/firefox'))
 
@@ -187,41 +193,42 @@ class Scraper(object):
 #        self.use_firefox()
 
         url = base_url + "/about-me/"
-        print "accessing {} \n".format(url)
+        print "accessing {} ".format(url)
         self.driver.get(url)
         aboutme_page = self.driver.page_source
 
         url = base_url + "/favorites/"
-        print "accessing {} \n".format(url)
+        print "accessing {} ".format(url)
         self.driver.get(url)
         favorites_page = self.driver.page_source
 
         url = base_url + "/following/"
-        print "accessing {} \n".format(url)
+        print "accessing {} ".format(url)
         self.driver.get(url)
         following_page = self.driver.page_source
 
         url = base_url + "/followers/"
-        print "accessing {} \n".format(url)
+        print "accessing {} ".format(url)
         self.driver.get(url)
         followers_page = self.driver.page_source
 
         url = base_url + "/reviews/"
-        print "accessing {} \n".format(url)
+        print "accessing {} ".format(url)
         self.driver.get(url)
         reviews_page = self.driver.page_source
 
         url = base_url + "/made-it/"
-        print "accessing {} \n".format(url)
+        print "accessing {} ".format(url)
         self.driver.get(url)
         madeit_page = self.driver.page_source
 
         url = base_url + "/recipes/"
-        print "accessing {} \n".format(url)
+        print "accessing {} ".format(url)
         self.driver.get(url)
         recipes_page = self.driver.page_source
 
-        print "access complete"
+        print "scraping complete"
+
 
         client = pymongo.MongoClient(MONGODB_URI)
         member_pages_coll = client.allrecipes.member_pages
@@ -236,10 +243,27 @@ class Scraper(object):
                  "madeit_page": madeit_page,
                  "recipes_page": recipes_page,
                  "link": base_url
-                }},
+            }},
              upsert = True)
 
         return member_pages_coll
+
+    def get_more_pages(self):
+        """Click on `more` button, if it exists,
+        """
+
+    def get_recipe_page(self, recipe_ID):
+        """Given a recipe ID, add page to recipes database.
+        """
+        url = self.base_url + "/recipe/" + recipe_ID
+        self.driver.get(url)
+        page = self.driver.page_source
+        self.recipes_coll.update_one(
+        {"recipe_ID" : recipe_ID},
+        {"$set" :
+            {"page" : page}},
+        upsert = True)
+
 
 
     def get_page_from_list(self, urllist, collname, offset=0):
@@ -298,6 +322,7 @@ class Parser(object):
         print "number of docs with favorites_dict", self.members_coll.find({'favorites_dict':{"$exists":True}}).count()
         print "number of docs with madeits_dict", self.members_coll.find({'madeits_dict':{"$exists":True}}).count()
         print "number of docs with aboutme", self.members_coll.find({'aboutme':{"$exists":True}}).count()
+        print "number of docs with personal", self.members_coll.find({'personalrecipes_dict':{"$exists":True}}).count()
         print "number of docs with nutrition values", self.members_coll.find({'nutrition':{"$exists":True}}).count()
 
     def get_recipes_coll_info(self):
@@ -338,7 +363,10 @@ class Parser(object):
             madeits = len(record.get('madeits_dict'))
         else:
             madeits = None
-
+        if record.get('personalrecipes_dict'):
+            personalrecipes = len(record.get('personalrecipes_dict'))
+        else:
+            personalrecipes = None
         print """
              member_ID is {}
              has "about me" page: {}
@@ -347,13 +375,15 @@ class Parser(object):
              number of reviews: {}
              number of favorites: {}
              number of recipes made: {}
+             number of personal recipes: {}
              """.format(record['member_ID'],
                         bool(record.get('aboutme')),
                         followers,
                         following,
                         reviews,
                         favorites,
-                        madeits
+                        madeits,
+                        personalrecipes
                         )
 
 
@@ -378,19 +408,19 @@ class Parser(object):
     def get_member_parsed_data(self, memberID=None):
         """Given memberID, parse data from member_pages_coll and return list of data"""
         doc_count = self.member_pages_coll.find({"member_ID":memberID}).count()
-        print "Number of scraped pages for {}: {}".format(memberID,doc_count)
-        if doc_count == 1:
-            print self.member_pages_coll.find_one({'member_ID':memberID}).keys()
+        print "Number of documents for {}: {}".format(memberID,doc_count)
+        # if doc_count == 1:
+        #     print self.member_pages_coll.find_one({'member_ID':memberID}).keys()
 
         if not self.members_coll.find_one({'member_ID':memberID}):
             self.members_coll.insert_one({"member_ID":memberID}, )
-        self.check_member_records(memberID)
         member_doc_keys = ['reviews_recipe_id_list', 'favorites_dict',
                            'favorites_recipe_id_list',
                            'aboutme', 'madeits_recipe_id_list', 'reviews_recipe_id_list',
                            'following_id_list','link','review_recipe_id_list',
-                           'followers_id_list', 'followers_dict', 'reviews_dict', 'member_ID', 'madeits_dict']
+                           'followers_id_list', 'followers_dict', 'reviews_dict', 'member_ID', 'madeits_dict','personalrecipes_dict']
         thismember_list = list(self.members_coll.find({'member_ID':memberID},member_doc_keys))
+    #    print thismember_list
         if len(thismember_list) != 1:
             raise Error,  "number of docs for member {} is not one".format(memberID)
         thismember = thismember_list[0]
@@ -420,10 +450,17 @@ class Parser(object):
             d = self.get_followers_data(thismember_pages['followers_page'])
             data['followers_id_list'] = d[0]
             data['followers_dict'] = d[1]
-
+        if not thismember.get('personalrecipes_dict'):
+            d = self.get_personalrecipe_data(thismember_pages['recipes_page'])
+            # print "this is d", d
+            data['personalrecipes_dict'] = d[1]
+        # print "This is data", data
         if data:
             self.members_coll.find_one_and_update({'member_ID':memberID},
                 {'$set': data}, upsert = True)
+
+        self.check_member_records(memberID)
+
 
 
     def get_members_reviews(self):
@@ -665,6 +702,23 @@ class Parser(object):
         id = [a.attrs['href'].split('/')[2] \
             for a in soup.select('div.profile-shell.full-page.ng-scope a.btns-two-small')][0]
         return (id, text)
+
+    def get_members_personalrecipes(self):
+        pass
+
+
+    def get_personalrecipe_data(self, page):
+        """Get recipe ID and name from personal recipes page"""
+
+        soup = BS(page, "html.parser")
+
+        # Extract pertinent info from soup
+        personalrecipe_names_list = [a.text.replace(".","") for a in collections.OrderedDict.fromkeys(soup.select('article.grid-col--fixed-tiles div.ng-scope h3.grid-col__h3--recipe-grid a.ng-scope')) if a.text != ' ']
+        personalrecipe_ID_list = [a.split('/')[2] for a in collections.OrderedDict.fromkeys([a.attrs['data-ng-href'] for a in soup.select('article.grid-col--fixed-tiles div.ng-scope h3.grid-col__h3--recipe-grid a.ng-scope')])]
+        personalrecipe_list_dict = dict(zip(personalrecipe_names_list, personalrecipe_ID_list))
+
+        return (personalrecipe_ID_list, personalrecipe_list_dict)
+
 
     def get_recipe_pkl_page_from_aws(self, s3key):
 
