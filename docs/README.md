@@ -4,7 +4,7 @@ This project poses a pervasive social concern in a data science framework and pr
 ## [Tools used](https://github.com/q0j0p/food/wiki/Tools-used)
 
 
- ![](github.com/q0j0p/food/blob/master/docs/resources/Screen%20Shot%202017-06-23%20at%205.14.46%20PM.png)
+ ![](./resources/Screen%20Shot%202017-06-23%20at%205.14.46%20PM.png)
 
 ## Problem definition
  <img align="left" src="https://github.com/q0j0p/food/blob/master/docs/resources/Screen%20Shot%202017-06-23%20at%205.14.46%20PM.png" width="300"> Mortality is inevitable and it befalls us all, but a third of all deaths are deemed premature.  The majority of premature deaths is preventable, arising from voluntary lifestyle choices.  The World Health Organization has estimated that if the major risk factors for chronic disease were eliminated, at least 80% of all heart disease, stroke, and type 2 diabetes would be prevented, and more than 40% of cancer cases would be prevented ([ref](http://www.who.int/chp/chronic_disease_report/full_report.pdf)).  In particular, about half of all American adults have one or more preventable, diet-related chronic diseases, including cardiovascular disease, type 2 diabetes, and overweight and obesity ([ref](https://health.gov/dietaryguidelines/2015/guidelines/executive-summary)). Among the statistics of lifestyle factors related to chronic disease, early deaths due to diet and physical activity patterns stands out in the fact that has actually increased in recent years (from 14% to 18% of all early deaths, 1990 to 2010). Poor diet and activity patterns is now the leading cause of early deaths, and the direct and indirect cost of their consequences are staggering.  
